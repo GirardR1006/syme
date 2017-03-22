@@ -16,46 +16,44 @@ data Methode  =  Methode {nom::String
 
 data Localisation  =  Localisation (Float,Float) deriving (Show)
 
-modMeth :: Methode -> [(String,_)] -> Methode
-modMeth m []   =  m
-modMeth m [(c,v)]  =  foldr chgVal m [(c,v)] 
+modMeth :: Methode -> [Either String Localisation]  -> [Methode]
+modMeth m []        = m 
+modMeth m (x:y:xs)  = chgVal x y m :modMeth xs  
 
-chgVal ::  (String,_) -> Methode -> Methode
-chgVal ("nom",v) am          =  Methode {nom  =  v
+chgVal ::  String -> Either String Localisation -> Methode -> Methode
+chgVal "nom" v  am          =  Methode {nom  =  v
                                         ,domaine  =  domaine am
                                         ,origine  =  origine am
                                         ,pos  =  pos am
                                         ,description  =  description am
                                         ,lien  =  lien am}
-chgVal ("domaine",v) am      =  Methode {nom  =  nom am 
+chgVal "domaine" v  am      =  Methode {nom  =  nom am 
                                         ,domaine  =  v
                                         ,origine  =  origine am
                                         ,pos  =  pos am
                                         ,description  =  description am
                                         ,lien  =  lien am}
-chgVal ("origine",v) am      =  Methode {nom  =  nom am
+chgVal "origine" v  am      =  Methode {nom  =  nom am
                                         ,domaine  =  domaine am
                                         ,origine  =  v
                                         ,pos  =  pos am
                                         ,description  =  description am
                                         ,lien  =  lien am}
-chgVal ("position",v) am     =  Methode {nom  =  nom am
+chgVal "position" v  am     =  Methode {nom  =  nom am
                                         ,domaine = domaine am
                                         ,origine  =  origine am
-                                        ,pos  =  conv2Pos(v) 
+                                        ,pos  =  v 
                                         ,description  =  description am
                                         ,lien  =  lien am}
-chgVal ("description",v) am  =  Methode {nom = nom am
+chgVal "description" v  am  =  Methode {nom = nom am
                                         ,domaine = domaine am
                                         ,origine  =  origine am
                                         ,pos  =  pos am
                                         ,description  =  v
                                         ,lien  =  lien am}
-chgVal ("lien",v) am         =  Methode {nom = nom am
+chgVal "lien" v  am         =  Methode {nom = nom am
                                         ,domaine = domaine am
                                         ,origine  =  origine am
                                         ,pos  =  pos am
                                         ,description  =  description am
                                         ,lien  =  v}
-conv2Pos :: String -> Localisation
-conv2Pos _ = Localisation (0,0)
