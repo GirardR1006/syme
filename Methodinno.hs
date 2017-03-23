@@ -2,7 +2,7 @@
     
 module Methodinno
 (Methode(..)
-,modMeth
+,chgVal
 ) where
 
 import Data.List
@@ -10,50 +10,25 @@ import Data.List
 data Methode  =  Methode {nom::String
                        ,domaine::String
                        ,origine::String
-                       ,pos::Localisation
+                       ,pos::Position
                        ,description::String
-                       ,lien::String} deriving (Show)
+                       ,lien::String} 
+                       deriving (Show)
+data ValeurMethode =  Nom String | Domaine String | Origine String |
+                      Pos Position | Description String | Lien String 
+                      deriving (Show, Read)
+data Position      =  Position (Float,Float) 
+                      deriving (Show, Read)
 
-data Localisation  =  Localisation (Float,Float) deriving (Show)
 
-modMeth :: Methode -> [Either String Localisation]  -> [Methode]
-modMeth m []        = m 
-modMeth m (x:y:xs)  = chgVal x y m :modMeth xs  
 
-chgVal ::  String -> Either String Localisation -> Methode -> Methode
-chgVal "nom" v  am          =  Methode {nom  =  v
-                                        ,domaine  =  domaine am
-                                        ,origine  =  origine am
-                                        ,pos  =  pos am
-                                        ,description  =  description am
-                                        ,lien  =  lien am}
-chgVal "domaine" v  am      =  Methode {nom  =  nom am 
-                                        ,domaine  =  v
-                                        ,origine  =  origine am
-                                        ,pos  =  pos am
-                                        ,description  =  description am
-                                        ,lien  =  lien am}
-chgVal "origine" v  am      =  Methode {nom  =  nom am
-                                        ,domaine  =  domaine am
-                                        ,origine  =  v
-                                        ,pos  =  pos am
-                                        ,description  =  description am
-                                        ,lien  =  lien am}
-chgVal "position" v  am     =  Methode {nom  =  nom am
-                                        ,domaine = domaine am
-                                        ,origine  =  origine am
-                                        ,pos  =  v 
-                                        ,description  =  description am
-                                        ,lien  =  lien am}
-chgVal "description" v  am  =  Methode {nom = nom am
-                                        ,domaine = domaine am
-                                        ,origine  =  origine am
-                                        ,pos  =  pos am
-                                        ,description  =  v
-                                        ,lien  =  lien am}
-chgVal "lien" v  am         =  Methode {nom = nom am
-                                        ,domaine = domaine am
-                                        ,origine  =  origine am
-                                        ,pos  =  pos am
-                                        ,description  =  description am
-                                        ,lien  =  v}
+
+chgVal ::  ValeurMethode -> Methode -> Methode
+chgVal (Nom nvnom) am                                 =  am {nom  =  nvnom}
+chgVal (Domaine nvdomaine) am                         =  am {domaine  =  nvdomaine}
+chgVal (Origine nvorigine) am                         =  am {origine  =  nvorigine}
+chgVal (Pos nvposition) am                            =  am {pos  =  nvposition}
+chgVal (Description nvdescription) am                 =  am {description  =  nvdescription}
+chgVal (Lien nvlien) am                               =  am {lien  =  nvlien}
+
+
