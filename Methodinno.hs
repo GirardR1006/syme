@@ -30,5 +30,3 @@ chgVal (Origine nvorigine) am                         =  am {origine  =  nvorigi
 chgVal (Pos nvposition) am                            =  am {pos  =  nvposition}
 chgVal (Description nvdescription) am                 =  am {description  =  nvdescription}
 chgVal (Lien nvlien) am                               =  am {lien  =  nvlien}
-
-
