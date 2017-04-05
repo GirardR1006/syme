@@ -1,2 +1,7 @@
+bin/
+dist/
+ChangeLog.md
 *.o
 *.hi
+*.swp*
+Setup.hs
