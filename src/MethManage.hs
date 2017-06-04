@@ -64,11 +64,11 @@ searchBy :: String --The field in which the predicate is supposed to be
          -> String --The predicate we want to find
          -> Map.Map Int Methode --The map we are looking into
          -> Maybe (Map.Map Int Methode) --The map containing values matching the predicate
-searchBy "nom" s m = Map.differenceWith f m <$> (getBoolMap nom s m) 
-searchBy "dom" s m = Map.differenceWith f m <$> (getBoolMap domaine s m) 
-searchBy "origine" s m = Map.differenceWith f m <$> (getBoolMap origine s m) 
-searchBy "description" s m = Map.differenceWith f m <$> (getBoolMap description s m) 
-searchBy "lien" s m = Map.differenceWith f m <$> (getBoolMap lien s m) 
+searchBy "Nom" s m = Map.differenceWith f m <$> (getBoolMap nom s m) 
+searchBy "Domaine d'application" s m = Map.differenceWith f m <$> (getBoolMap domaine s m) 
+searchBy "Origine" s m = Map.differenceWith f m <$> (getBoolMap origine s m) 
+searchBy "Description" s m = Map.differenceWith f m <$> (getBoolMap description s m) 
+searchBy "Lien" s m = Map.differenceWith f m <$> (getBoolMap lien s m) 
 searchBy _ _ _ = Nothing
 --Get a boolean map returning True if s is contained within values of m, False
 --otherwise

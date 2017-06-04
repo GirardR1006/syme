@@ -252,7 +252,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkEntry">
+                      <object class="GtkEntry" id="searchTxt">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                       </object>
@@ -289,7 +289,6 @@
                     </child>
                     <child>
                       <object class="GtkTreeViewColumn" id="resultIDTreeViewColumn">
-                        <property name="visible">False</property>
                         <property name="title" translatable="yes">ID</property>
                         <child>
                           <object class="GtkCellRendererText" id="resultIDTreeViewCell"/>

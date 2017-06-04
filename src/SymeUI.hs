@@ -13,19 +13,13 @@ import Data.Maybe
 import Data.Map as M
 import MethManage
 import Methodinno
-hello :: (ButtonClass o) => o -> IO ()
-hello b = set b [buttonLabel := "Hello World"]
-coucou :: (ButtonClass o) => o -> IO ()
-coucou b = set b [buttonLabel := "Coucou"]
---toto :: (ComboBoxClass o, ButtonClass b) => o -> i -> IO()
---toto o b = set b [buttonLabel := o]
---titi :: (TextViewClass o, ButtonClass b) => o -> b -> IO()
---titi o b = textViewSetBuffer o (buttonGetLabel b)
+
 assignComboTextToBuffer :: (ComboBoxClass o, TextBufferClass i) => o -> i -> IO()
 assignComboTextToBuffer o i = do
             tmp <- comboBoxGetActiveText o
             case tmp of Just str -> textBufferSetText i (T.unpack str)      
                         Nothing  -> textBufferSetText i ""
+
 registerMeth :: EntryClass a => a -> a -> a -> a -> a -> a -> IO(Methode)
 registerMeth nameE fldE posE orgnE dscpE linkE = do
                                             name <- entryGetText nameE
@@ -51,15 +45,34 @@ registerMeth nameE fldE posE orgnE dscpE linkE = do
                                                         | s == "" = show(Position (0,0))
                                                         | s!!0 /= '(' = show(Position (0,0))
                                                         | otherwise = s
-currentTvwSelection :: TreeView -> ListStore (String,String) -> IO() 
-currentTvwSelection t m = do 
-                     --tvwM <- treeViewGetModel t 
-                     tvwS <- treeViewGetSelection t
-                     tvwP <- treeSelectionGetSelectedRows tvwS
-                     let s = Prelude.head (Prelude.head tvwP)
-                     v <- listStoreGetValue m s
-                     putStrLn $ "selected" ++ (snd v)
 
+currentTvwSelection :: TreeView -> ListStore (String,String) -> IO(String) 
+currentTvwSelection t m = do
+                        --TODO: take the model directly from the treeView
+                        --Make it robust against empty selection exception
+                        --tvwM <- treeViewGetModel t 
+                        tvwS <- treeViewGetSelection t
+                        tvwP <- treeSelectionGetSelectedRows tvwS
+                        let s = Prelude.head (Prelude.head tvwP)
+                        v <- listStoreGetValue m s
+                        putStrLn $ "selected" ++ (snd v)
+                        return(fst v)
+
+convertMapToListStore :: M.Map Int Methode -> [(String,String)]
+convertMapToListStore m = Prelude.map f (toList m)
+    where f (a,b) = (show a,nom b)
+----Display the search result of query inside of a treeview
+mapBySearchResult :: ComboBox -> Entry -> M.Map Int Methode -> IO(Maybe ([(String,String)]))
+mapBySearchResult c e m  = do
+                         query <- entryGetText e
+                         putStrLn query
+                         criterion <- comboBoxGetActiveText c
+                         let rmap = case criterion of Just  str -> searchBy (T.unpack str) query m  
+                                                      Nothing   -> Nothing
+                         return (convertMapToListStore <$> rmap)
+
+                                                    
+                            
 symeui :: IO ()
 symeui = do
     initGUI
@@ -90,6 +103,7 @@ symeui = do
     txtbuffer <- textBufferNew Nothing
     txtbuffer2 <- textBufferNew Nothing
     --Text entries definition
+    querytxt <- builderGetObject builder castToEntry "searchTxt"
     nametxtadd <- builderGetObject builder castToEntry "addMethnameTxt"
     fldtxtadd <- builderGetObject builder castToEntry "addMethfldTxt"
     postxtadd <- builderGetObject builder castToEntry "addMethposTxt"
@@ -121,9 +135,6 @@ symeui = do
 --Main window signals
 --Buttons
     abttn `on` buttonActivated $ do
-                                   -- assignComboTextToBuffer scbbx txtbuffer2
-                                   -- textViewSetBuffer domtxt txtbuffer2
-                                   -- widgetShowAll windowadd
                                    onche <- dialogRun dialogadd
                                    --TODO: find a more efficient way to handle
                                    --dialog than simply hide it
@@ -135,7 +146,16 @@ symeui = do
                                        >> widgetHide dialogadd
 
     sbttn `on` buttonActivated $ do
-                                   currentTvwSelection restreeview store
+                                   --currentTvwSelection restreeview store
+                                   --TODO: Lorsque la map comporte plus d'un
+                                   --élément, erreur fatale de Non-exhaustive
+                                   --pattern (alors que la ligne suivante fonctionne)
+                                   --mapM_ (listStoreAppend store) [("1","Test"),("2","Test2")]
+                                   res <- mapBySearchResult scbbx querytxt initialmap 
+                                   print res
+                                   case res of Just []      -> listStoreClear store
+                                               Just x       -> mapM_ (listStoreAppend store) x 
+                                               Nothing      -> return()
     qbttn `on` buttonActivated $ do
                                     putStrLn "Saving data in storage..."
                                     saveMapInFile initialmap "src/onche"
@@ -148,7 +168,8 @@ symeui = do
                                     putStrLn (show newmeth)
                                     listStoreAppend store (show((maxKeyInMap initialmap) + 1),(nom newmeth))
                                     --newMap <- addMethToMap newmeth initialmap  
-                                    dialogResponse dialogadd ResponseOk 
+                                    dialogResponse dialogadd ResponseOk
+
     qbttnadd `on` buttonActivated $ dialogResponse dialogadd ResponseCancel
 
 -- Start the window and initiate the GUI for use
