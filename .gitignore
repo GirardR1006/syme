@@ -4,4 +4,7 @@ ChangeLog.md
 *.o
 *.hi
 *.swp*
-Setup.hs
+*.tmp
+*.txt
+*.cod
+

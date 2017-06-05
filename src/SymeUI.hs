@@ -46,17 +46,19 @@ registerMeth nameE fldE posE orgnE dscpE linkE = do
                                                         | s!!0 /= '(' = show(Position (0,0))
                                                         | otherwise = s
 
-currentTvwSelection :: TreeView -> ListStore (String,String) -> IO(String) 
-currentTvwSelection t m = do
+currentTvwSelectionID :: TreeView -> ListStore (String,String) -> IO(Int) 
+currentTvwSelectionID t m = do
                         --TODO: take the model directly from the treeView
                         --Make it robust against empty selection exception
                         --tvwM <- treeViewGetModel t 
                         tvwS <- treeViewGetSelection t
                         tvwP <- treeSelectionGetSelectedRows tvwS
-                        let s = Prelude.head (Prelude.head tvwP)
-                        v <- listStoreGetValue m s
-                        putStrLn $ "selected" ++ (snd v)
-                        return(fst v)
+                        if tvwP == [] 
+                            then return(-1)
+                            else do let s = Prelude.head (Prelude.head tvwP)
+                                    v <- listStoreGetValue m s
+                                    putStrLn $ "selected item " ++ (snd v) ++ "with ID" ++ (fst v)
+                                    return(read(fst v)::Int)
 
 convertMapToListStore :: M.Map Int Methode -> [(String,String)]
 convertMapToListStore m = Prelude.map f (toList m)
@@ -71,7 +73,13 @@ mapBySearchResult c e m  = do
                                                       Nothing   -> Nothing
                          return (convertMapToListStore <$> rmap)
 
-                                                    
+--Update store content regarding to search query
+--arguments: search combobox, query textentry, map to search in
+--res <- mapBySearchResult scbbx querytxt initialmap 
+--print res
+--case res of Just []      -> listStoreClear store
+--            Just x       -> mapM_ (listStoreAppend store) x 
+--            Nothing      -> return()
                             
 symeui :: IO ()
 symeui = do
@@ -98,10 +106,24 @@ symeui = do
     comboBoxAppendText scbbx $ T.pack "Description" 
     --Textdisplay definition
     nametxt <- builderGetObject builder castToTextView "nameTxt"
-    domtxt <- builderGetObject builder castToTextView "fldTxt"
-    --Textbuffers definition
-    txtbuffer <- textBufferNew Nothing
-    txtbuffer2 <- textBufferNew Nothing
+    fldtxt <- builderGetObject builder castToTextView "fldTxt"
+    postxt <- builderGetObject builder castToTextView "posTxt"
+    orgntxt <- builderGetObject builder castToTextView "orgnTxt"
+    dscptxt <- builderGetObject builder castToTextView "dscpTxt"
+    linktxt <- builderGetObject builder castToTextView "linkTxt"
+    --Textbuffers definition and assignation
+    namebuffer <- textBufferNew Nothing
+    fldbuffer <- textBufferNew Nothing
+    posbuffer <- textBufferNew Nothing
+    orgnbuffer <- textBufferNew Nothing
+    dscpbuffer <- textBufferNew Nothing
+    linkbuffer <- textBufferNew Nothing
+    textViewSetBuffer nametxt namebuffer
+    textViewSetBuffer fldtxt fldbuffer
+    textViewSetBuffer postxt posbuffer
+    textViewSetBuffer orgntxt orgnbuffer
+    textViewSetBuffer dscptxt dscpbuffer
+    textViewSetBuffer linktxt linkbuffer
     --Text entries definition
     querytxt <- builderGetObject builder castToEntry "searchTxt"
     nametxtadd <- builderGetObject builder castToEntry "addMethnameTxt"
@@ -115,6 +137,7 @@ symeui = do
     
     --TreeView initialization and configuration
     restreeview <- builderGetObject builder castToTreeView "resultTreeView"
+    restreeviewselect <- treeViewGetSelection restreeview
     rescolumn <- builderGetObject builder castToTreeViewColumn "resultTreeViewColumn"
     idcolumn <- builderGetObject builder castToTreeViewColumn "resultIDTreeViewColumn"
     celltxt <- builderGetObject builder castToCellRendererText "resultTreeViewCell"
@@ -145,23 +168,19 @@ symeui = do
                                        putStrLn "Cancel method received, hiding window."
                                        >> widgetHide dialogadd
 
-    sbttn `on` buttonActivated $ do
-                                   --currentTvwSelection restreeview store
-                                   --TODO: Lorsque la map comporte plus d'un
-                                   --élément, erreur fatale de Non-exhaustive
-                                   --pattern (alors que la ligne suivante fonctionne)
-                                   --mapM_ (listStoreAppend store) [("1","Test"),("2","Test2")]
-                                   res <- mapBySearchResult scbbx querytxt initialmap 
-                                   print res
-                                   case res of Just []      -> listStoreClear store
-                                               Just x       -> mapM_ (listStoreAppend store) x 
-                                               Nothing      -> return()
+    sbttn `on` buttonActivated $ do return()
     qbttn `on` buttonActivated $ do
                                     putStrLn "Saving data in storage..."
                                     saveMapInFile initialmap "src/onche"
                                     putStrLn "Quitting project Syme..."
                                     mainQuit
 --TreeView signals
+    restreeviewselect `on` treeSelectionSelectionChanged $ do 
+                                                            id <- currentTvwSelectionID restreeview store
+                                                            if id == -1 
+                                                                then return()
+                                                            else case M.lookup id initialmap of Just r  -> textBufferSetText namebuffer (nom r)>>textBufferSetText fldbuffer (domaine r)>>textBufferSetText posbuffer (show(pos r))>>textBufferSetText orgnbuffer (origine r)>>textBufferSetText dscpbuffer (description r)>>textBufferSetText linkbuffer (lien r)
+                                                                                                Nothing -> return()
 --Add method window signals
     abttnadd `on` buttonActivated $ do 
                                     newmeth <- registerMeth nametxtadd fldtxtadd postxtadd orgntxtadd linktxtadd dscptxtadd
