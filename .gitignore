@@ -1,5 +1,6 @@
 bin/
 dist/
+doc/
 ChangeLog.md
 *.o
 *.hi
@@ -7,4 +8,4 @@ ChangeLog.md
 *.tmp
 *.txt
 *.cod
-
+sources

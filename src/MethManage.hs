@@ -5,6 +5,7 @@ Mostly a wrapper around the Data.Map library.
 --}
 module MethManage 
 (searchBy
+,splitStr
 ,getMapMeth
 ,addMethToMap
 ,saveMapInFile
@@ -94,7 +95,8 @@ saveMapInFile m fp = do
                       writeFile fp ""
                       mapM_ (appendFile fp) $ toBeWritten 
                         where stringRepresentation m =
-                                                    nom m ++ ";" ++ domaine m ++
-                                                    ";" ++ origine m ++ ";" ++
+                                                    f(nom m) ++ ";" ++f(domaine m) ++
+                                                    ";" ++ f(origine m) ++ ";" ++
                                                     show (pos m) ++";" ++
-                                                    description m ++ ";" ++ lien m ++ "\n"
+                                                    f(description m) ++ ";" ++ f(lien m) ++ ";\n"
+                                                        where f m = if m == "" then " " else m
