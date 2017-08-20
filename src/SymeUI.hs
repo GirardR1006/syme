@@ -94,14 +94,19 @@ symeui = do
     dialogadd <- builderGetObject builder castToDialog "addMethDialog"
     dialogmod <- builderGetObject builder castToDialog "modMethDialog"
     dialogdel <- builderGetObject builder castToDialog "delMethDialog" 
+    dialogupd <- builderGetObject builder castToDialog "autoUpdateDialog" 
+    dialogdif <- builderGetObject builder castToDialog "diffDialog" 
     window `on` deleteEvent $ liftIO mainQuit >> return False
     dialogadd `on` deleteEvent $ liftIO (widgetHide dialogadd) >> return False
     dialogmod `on` deleteEvent $ liftIO (widgetHide dialogmod) >> return False
     dialogdel `on` deleteEvent $ liftIO (widgetHide dialogdel) >> return False
-    --Button definition
+    dialogupd `on` deleteEvent $ liftIO (widgetHide dialogupd) >> return False
+    dialogdif `on` deleteEvent $ liftIO (widgetHide dialogdif) >> return False
+--Button definition
     abttn <- builderGetObject builder castToButton "addBttn"
     sbttn <- builderGetObject builder castToButton "showBttn"
     dbttn <- builderGetObject builder castToButton "delBttn"
+    autbttn<- builderGetObject builder castToButton "autBttn"
     qbttn <- builderGetObject builder castToButton "quitBttn"
     abttnadd <- builderGetObject builder castToButton "addMethaddBttn"
     qbttnadd <- builderGetObject builder castToButton "addMethquitBttn"
@@ -109,35 +114,55 @@ symeui = do
     qbttnmod <- builderGetObject builder castToButton "modMethquitBttn"
     dbttndel <- builderGetObject builder castToButton "delMethdelBttn"
     qbttndel <- builderGetObject builder castToButton "delMethquitBttn"
-    --Comboboxes definition
-    --Search combobox item must match with the searchBy function criteria
+    abttnau <- builderGetObject builder castToButton "autoUpdateupdateBttn"
+    qbttnau <- builderGetObject builder castToButton "autoUpdatequitBttn"
+    vsbttndiff <- builderGetObject builder castToButton "diffvalselBttn"
+    qbttndiff <- builderGetObject builder castToButton "diffquitBttn"
+--Comboboxes definition
+--Search combobox item must match with the searchBy function criteria
     scbbx <- builderGetObject builder castToComboBox "searchCbbx"
     comboBoxSetModelText scbbx
     comboBoxAppendText scbbx $ T.pack "Nom" 
     comboBoxAppendText scbbx $ T.pack "Domaine d'application" 
     comboBoxAppendText scbbx $ T.pack "Origine" 
     comboBoxAppendText scbbx $ T.pack "Description" 
-    --Textdisplay definition
+--Textdisplay definition
     nametxt <- builderGetObject builder castToTextView "nameTxt"
     fldtxt <- builderGetObject builder castToTextView "fldTxt"
     postxt <- builderGetObject builder castToTextView "posTxt"
     orgntxt <- builderGetObject builder castToTextView "orgnTxt"
     dscptxt <- builderGetObject builder castToTextView "dscpTxt"
     linktxt <- builderGetObject builder castToTextView "linkTxt"
-    --Textbuffers definition and assignation
+    diffnametxt <- builderGetObject builder castToTextView "diffnameTxt"
+    difffldtxt <- builderGetObject builder castToTextView "difffldTxt"
+    difforgntxt <- builderGetObject builder castToTextView "difforgnTxt"
+    diffdscptxt <- builderGetObject builder castToTextView "diffdscpTxt"
+    difflinktxt <- builderGetObject builder castToTextView "difflinkTxt"
+--Textbuffers definition and assignation
     namebuffer <- textBufferNew Nothing
     fldbuffer <- textBufferNew Nothing
     posbuffer <- textBufferNew Nothing
     orgnbuffer <- textBufferNew Nothing
     dscpbuffer <- textBufferNew Nothing
     linkbuffer <- textBufferNew Nothing
+    diffnamebuffer <- textBufferNew Nothing
+    difffldbuffer <- textBufferNew Nothing
+    diffposbuffer <- textBufferNew Nothing
+    difforgnbuffer <- textBufferNew Nothing
+    diffdscpbuffer <- textBufferNew Nothing
+    difflinkbuffer <- textBufferNew Nothing
     textViewSetBuffer nametxt namebuffer
     textViewSetBuffer fldtxt fldbuffer
     textViewSetBuffer postxt posbuffer
     textViewSetBuffer orgntxt orgnbuffer
     textViewSetBuffer dscptxt dscpbuffer
     textViewSetBuffer linktxt linkbuffer
-    --Text entries definition
+    textViewSetBuffer diffnametxt diffnamebuffer
+    textViewSetBuffer difffldtxt difffldbuffer
+    textViewSetBuffer difforgntxt difforgnbuffer
+    textViewSetBuffer diffdscptxt diffdscpbuffer
+    textViewSetBuffer difflinktxt difflinkbuffer
+--Text entries definition
     querytxt <- builderGetObject builder castToEntry "searchTxt"
     nametxtadd <- builderGetObject builder castToEntry "addMethnameTxt"
     fldtxtadd <- builderGetObject builder castToEntry "addMethfldTxt"
@@ -151,11 +176,12 @@ symeui = do
     orgntxtmod <- builderGetObject builder castToEntry "modMethorgnTxt"
     dscptxtmod <- builderGetObject builder castToEntry "modMethdscpTxt"
     linktxtmod <- builderGetObject builder castToEntry "modMethlinkTxt"
-    --Loading data from file. Since it will be modified several time during
-    --runtime (on a single-thread basis), IORef monad is used.
+--Loading data from file. Since it will be modified several time during
+--runtime (on a single-thread basis), IORef monad is used.
     nm <- getMapMeth "src/onche.cod"
     methmap<- newIORef nm
-    --TreeView initialization and configuration
+--TreeView initialization and configuration
+----Main treeview
     restreeview <- builderGetObject builder castToTreeView "resultTreeView"
     restreeviewselect <- treeViewGetSelection restreeview
     rescolumn <- builderGetObject builder castToTreeViewColumn "resultTreeViewColumn"
@@ -169,14 +195,40 @@ symeui = do
     cellLayoutSetAttributes rescolumn celltxt store $ \x -> [cellText :=  snd x]
     cellLayoutSetAttributes idcolumn cellidtxt store $ \x -> [cellText :=  fst x]
     treeViewSetModel restreeview store
-
+----Auto-update selector treeview, used to show the different sources of online
+----data and the last date they were fetched 
+    autreeview <- builderGetObject builder castToTreeView "autoUpdateTreeView"
+    autreeviewselect <- treeViewGetSelection autreeview
+    sourcecolumn <- builderGetObject builder castToTreeViewColumn "sourceTreeViewColumn"
+    lastudcolumn <- builderGetObject builder castToTreeViewColumn "lastUDTreeViewColumn"
+    cellsource <- builderGetObject builder castToCellRendererText "sourceTreeViewCell"
+    celllastud <- builderGetObject builder castToCellRendererText "lastUDTreeViewCell"
+    --TODO: Where do we store the source information? In another source file?
+    --Modifying the current one? 
+    --let listofNames = Prelude.map (nom.snd) (M.toList nm)
+    --let listofIDs   = Prelude.map fst (M.toList nm)
+    --let joinedlist = Prelude.zipWith (\a b -> (show(a),b)) listofIDs listofNames
+    --audstore <- listStoreNew joinedlist
+    --cellLayoutSetAttributes sourcecolumn cellsource store $ \x -> [cellText :=  snd x]
+    --cellLayoutSetAttributes lastudcolumn celllastud store $ \x -> [cellText :=  fst x]
+    --treeViewSetModel restreeview audstore
+----Diff treeview, used to show the result of a symebot update on a source
+    difftreeview <- builderGetObject builder castToTreeView "diffDisplayTreeView"
+    difftreeviewselect <- treeViewGetSelection difftreeview
+    omcolumn <- builderGetObject builder castToTreeViewColumn "oldMethTreeViewColumn"
+    nmcolumn <- builderGetObject builder castToTreeViewColumn "newMethTreeViewColumn"
+    selcolumn <- builderGetObject builder castToTreeViewColumn "toggleTreeViewColumn"
+    cellom <- builderGetObject builder castToCellRendererText "oldMethTreeViewCell"
+    cellnm <- builderGetObject builder castToCellRendererText "newMethTreeViewCell"
+    celltg <- builderGetObject builder castToCellRendererToggle "toggleTreeViewCell"
+    --TODO: Same as above
 -- Linking functions to signals
 -- Note that the only relevant signals here are those defined
 -- in the Gtk package documentation on Hackage. 
 -- Handlers defined in Glade are of no use here.
 
 --Main window signals
---Buttons
+----Buttons
     abttn `on` buttonActivated $ do handleAdd <- dialogRun dialogadd
                                     --TODO: find a more efficient way to handle
                                     --dialog than simply hide it
@@ -202,6 +254,13 @@ symeui = do
                                         putStrLn "Cancel signal received, hiding window."
                                         >> widgetHide dialogdel
                                     
+    autbttn `on` buttonActivated $ do handleUpd <- dialogRun dialogupd
+                                      if handleUpd == ResponseOk
+                                          then putStrLn "Ok signal received, auto-update complete."
+                                          >> widgetHide dialogupd
+                                      else
+                                          putStrLn "Cancel signal received, hiding window."
+                                          >> widgetHide dialogupd
                                     
     qbttn `on` buttonActivated $ do
                                     putStrLn "Saving data in storage..."
@@ -209,14 +268,18 @@ symeui = do
                                     saveMapInFile rf "src/onche.cod"
                                     putStrLn "Quitting project Syme..."
                                     mainQuit
---TreeView signals
+----TreeView signals
     restreeviewselect `on` treeSelectionSelectionChanged $ do id <- currentTvwSelectionID restreeview store
                                                               ref <- readIORef methmap
                                                               if id == -1 
                                                                   then return()
                                                               else case M.lookup id ref of Just r  -> textBufferSetText namebuffer (nom r)>>textBufferSetText fldbuffer (domaine r)>>textBufferSetText posbuffer (show(pos r))>>textBufferSetText orgnbuffer (origine r)>>textBufferSetText dscpbuffer (description r)>>textBufferSetText linkbuffer (lien r)
                                                                                            Nothing -> return()
+---Update the treeview content 
+    querytxt `on` editableChanged $ do ref <- readIORef methmap
+                                       updateStore scbbx querytxt ref store      
 --Add method window signals
+----Buttons
     abttnadd `on` buttonActivated $ do newmeth <- registerMeth nametxtadd fldtxtadd postxtadd orgntxtadd dscptxtadd linktxtadd
                                        ref <- readIORef methmap
                                        putStrLn (show newmeth)
@@ -227,6 +290,7 @@ symeui = do
 
     qbttnadd `on` buttonActivated $ dialogResponse dialogadd ResponseCancel
 --Modify method window signals
+----Buttons
     dialogmod `on` showSignal $ do id <- currentTvwSelectionID restreeview store
                                    ref <- readIORef methmap
                                    if id == -1
@@ -244,6 +308,7 @@ symeui = do
 
     qbttnmod `on` buttonActivated $ do dialogResponse dialogmod ResponseCancel
 --Delete method window signals
+----Buttons
     dbttndel `on` buttonActivated $ do id <- currentTvwSelectionID restreeview store
                                        if id == -1 
                                            then dialogResponse dialogdel ResponseOk
@@ -252,9 +317,31 @@ symeui = do
                                                print <$> readIORef methmap
                                                dialogResponse dialogdel ResponseOk 
     qbttndel `on` buttonActivated $ dialogResponse dialogdel ResponseCancel
---Query entry signal
-    querytxt `on` editableChanged $ do ref <- readIORef methmap
-                                       updateStore scbbx querytxt ref store      
+--Auto-update method window signals
+----Buttons
+    --TODO: get the id and date of the current row, launch symebot on it and
+    --display results 
+    --abttnau `on` buttonActivated $ do id <- curretnTvwSelectionSource autreeview austore
+    --                               if error 
+    --                                  then dialogResponse dialogupd ResponseOk
+    --                               else do methsToUpdate <- getList id
+    --                                       parseres <- symeParse id methsToUpdate
+    --                                       handleDiff <- dialogRun dialogdif
+                                            --if handleDiff == ResponseOk
+                                            --    then putStrLn "Ok signal received, auto-update complete."
+                                            --    >> widgetHide dialogdif
+                                            --else
+                                            --    putStrLn "Cancel signal received, hiding window."
+                                            --    >> widgetHide dialogdif
+    qbttnau `on` buttonActivated $ dialogResponse dialogupd ResponseCancel
+----TreeView
+    --No particular signals
+--Diff window signals
+----Buttons
+----TODO: compare the parsed methods and the new one, display the difference in
+----the textboxes, and allow the selection to be registered
+    --vsbttndiff `on` buttonActivated $ do registerSelection 
+    qbttndiff `on` buttonActivated $ dialogResponse dialogdif ResponseCancel
 -- Start the window and initiate the GUI for use
     widgetShowAll window
     mainGUI
