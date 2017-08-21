@@ -1,7 +1,6 @@
 {--
 Data management helper functions.
 Provide data read and write features, as well as research features.
-Mostly a wrapper around the Data.Map library.
 --}
 module MethManage 
 (searchBy
@@ -35,7 +34,7 @@ getValLst (x:xs) = pop x:getValLst xs
                     pop (x:xs) = xs
 
 createMethFromVal :: String  --Record values (Strings separated with semicolons)
-                  -> Methode --Methodes value
+                  -> Methode 
 createMethFromVal [] = Methode {nom="",domaine="",origine=""
                                , pos=read("(0,0)")::Position,description="",lien=""}
 createMethFromVal l = Methode {nom=x!!0,domaine=x!!1,origine=x!!2
