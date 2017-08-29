@@ -12,8 +12,11 @@ import Graphics.UI.Gtk
 import Data.Text as T
 import Data.Maybe
 import Data.Map as M
+import Data.Time
 import MethManage
+import SourceManage
 import Methodinno
+import Symebot
 
 assignComboTextToBuffer :: (ComboBoxClass o, TextBufferClass i) => o -> i -> IO()
 assignComboTextToBuffer o i = do
@@ -21,31 +24,23 @@ assignComboTextToBuffer o i = do
             case tmp of Just str -> textBufferSetText i (T.unpack str)      
                         Nothing  -> textBufferSetText i ""
 
-registerMeth :: EntryClass a => a -> a -> a -> a -> a -> a -> IO(Methode)
-registerMeth nameE fldE posE orgnE dscpE linkE = do
+registerMeth :: EntryClass a => a -> a -> a -> a -> a -> IO(Methode)
+registerMeth nameE fldE orgnE dscpE linkE = do
                                             name <- entryGetText nameE
                                             fld <- entryGetText fldE
-                                            tmppos <- entryGetText posE
-                                            let position = posCheck tmppos
                                             orgn <- entryGetText orgnE
                                             dscp <- entryGetText dscpE
                                             link <- entryGetText linkE
                                             putStrLn ("name: " ++ name)
                                             putStrLn ("field: " ++ fld)
-                                            putStrLn ("position: " ++ position)
-                                            putStrLn ("origin: " ++ orgn)
                                             putStrLn ("link: " ++ link)
                                             putStrLn ("description: " ++ dscp)
                                             return( Methode {nom=name
-                                                             ,domaine=fld
-                                                             ,origine=orgn
-                                                             ,pos=read(position)::Position
-                                                             ,description=dscp
-                                                             ,lien=link} )
-                                              where posCheck s 
-                                                        | s == "" = show(Position (0,0))
-                                                        | s!!0 /= '(' = show(Position (0,0))
-                                                        | otherwise = s
+                                                            ,domaine=fld
+                                                            ,origine=orgn
+                                                            ,description=dscp
+                                                            ,lien=link
+                                                            ,sourceName="utilisateur"} )
 
 currentTvwSelectionID :: TreeView -> ListStore (String,String) -> IO(Int) 
 currentTvwSelectionID t m = do
@@ -61,9 +56,33 @@ currentTvwSelectionID t m = do
                                     putStrLn $ "selected item: " ++ (snd v) ++ " with ID " ++ (fst v)
                                     return(read(fst v)::Int)
 
+currentTvwSelectionURL :: TreeView -> ListStore (String,Day) -> IO(String) 
+currentTvwSelectionURL t m = do tvwS <- treeViewGetSelection t
+                                tvwP <- treeSelectionGetSelectedRows tvwS
+                                if tvwP == [] 
+                                    then return("NO_URL")
+                                    else do let s = Prelude.head (Prelude.head tvwP)
+                                            v <- listStoreGetValue m s
+                                            putStrLn $ "selected url: " ++ fst(v)
+                                            return $ fst v
+
+
+ded :: TreeView -> ListStore (RawO,Bool) -> IO(RawO) 
+ded t m = do tvwS <- treeViewGetSelection t
+             tvwP <- treeSelectionGetSelectedRows tvwS
+             if tvwP == [] 
+                 then return(RawO{titlep=""})
+             else 
+                 do let s = Prelude.head (Prelude.head tvwP)
+                    v <- listStoreGetValue m s
+                    return $ fst v
+
 convertMapToListStore :: M.Map Int Methode -> [(String,String)]
 convertMapToListStore m = Prelude.map f (toList m)
     where f (a,b) = (show a,nom b)
+convertOutToListStore :: [RawO] -> [(RawO,Bool)]
+convertOutToListStore m = Prelude.map f m
+    where f m = (m,True)
 ----Display the search result of query inside of a treeview
 mapBySearchResult :: ComboBox -> Entry -> M.Map Int Methode -> IO(Maybe ([(String,String)]))
 mapBySearchResult c e m  = do
@@ -129,7 +148,6 @@ symeui = do
 --Textdisplay definition
     nametxt <- builderGetObject builder castToTextView "nameTxt"
     fldtxt <- builderGetObject builder castToTextView "fldTxt"
-    postxt <- builderGetObject builder castToTextView "posTxt"
     orgntxt <- builderGetObject builder castToTextView "orgnTxt"
     dscptxt <- builderGetObject builder castToTextView "dscpTxt"
     linktxt <- builderGetObject builder castToTextView "linkTxt"
@@ -141,19 +159,16 @@ symeui = do
 --Textbuffers definition and assignation
     namebuffer <- textBufferNew Nothing
     fldbuffer <- textBufferNew Nothing
-    posbuffer <- textBufferNew Nothing
     orgnbuffer <- textBufferNew Nothing
     dscpbuffer <- textBufferNew Nothing
     linkbuffer <- textBufferNew Nothing
     diffnamebuffer <- textBufferNew Nothing
     difffldbuffer <- textBufferNew Nothing
-    diffposbuffer <- textBufferNew Nothing
     difforgnbuffer <- textBufferNew Nothing
     diffdscpbuffer <- textBufferNew Nothing
     difflinkbuffer <- textBufferNew Nothing
     textViewSetBuffer nametxt namebuffer
     textViewSetBuffer fldtxt fldbuffer
-    textViewSetBuffer postxt posbuffer
     textViewSetBuffer orgntxt orgnbuffer
     textViewSetBuffer dscptxt dscpbuffer
     textViewSetBuffer linktxt linkbuffer
@@ -166,20 +181,20 @@ symeui = do
     querytxt <- builderGetObject builder castToEntry "searchTxt"
     nametxtadd <- builderGetObject builder castToEntry "addMethnameTxt"
     fldtxtadd <- builderGetObject builder castToEntry "addMethfldTxt"
-    postxtadd <- builderGetObject builder castToEntry "addMethposTxt"
     orgntxtadd <- builderGetObject builder castToEntry "addMethorgnTxt"
     dscptxtadd <- builderGetObject builder castToEntry "addMethdscpTxt"
     linktxtadd <- builderGetObject builder castToEntry "addMethlinkTxt"
     nametxtmod <- builderGetObject builder castToEntry "modMethnameTxt"
     fldtxtmod <- builderGetObject builder castToEntry "modMethfldTxt"
-    postxtmod <- builderGetObject builder castToEntry "modMethposTxt"
     orgntxtmod <- builderGetObject builder castToEntry "modMethorgnTxt"
     dscptxtmod <- builderGetObject builder castToEntry "modMethdscpTxt"
     linktxtmod <- builderGetObject builder castToEntry "modMethlinkTxt"
 --Loading data from file. Since it will be modified several time during
 --runtime (on a single-thread basis), IORef monad is used.
     nm <- getMapMeth "src/onche.cod"
+    si <- sourcesFromFile "test/sources.txt"
     methmap<- newIORef nm
+    --TODO: fonction qui créé de si et nm une liste de valeurs Source 
 --TreeView initialization and configuration
 ----Main treeview
     restreeview <- builderGetObject builder castToTreeView "resultTreeView"
@@ -203,15 +218,10 @@ symeui = do
     lastudcolumn <- builderGetObject builder castToTreeViewColumn "lastUDTreeViewColumn"
     cellsource <- builderGetObject builder castToCellRendererText "sourceTreeViewCell"
     celllastud <- builderGetObject builder castToCellRendererText "lastUDTreeViewCell"
-    --TODO: Where do we store the source information? In another source file?
-    --Modifying the current one? 
-    --let listofNames = Prelude.map (nom.snd) (M.toList nm)
-    --let listofIDs   = Prelude.map fst (M.toList nm)
-    --let joinedlist = Prelude.zipWith (\a b -> (show(a),b)) listofIDs listofNames
-    --audstore <- listStoreNew joinedlist
-    --cellLayoutSetAttributes sourcecolumn cellsource store $ \x -> [cellText :=  snd x]
-    --cellLayoutSetAttributes lastudcolumn celllastud store $ \x -> [cellText :=  fst x]
-    --treeViewSetModel restreeview audstore
+    audstore <- listStoreNew si
+    cellLayoutSetAttributes sourcecolumn cellsource audstore $ \x -> [cellText :=  fst x]
+    cellLayoutSetAttributes lastudcolumn celllastud audstore $ \x -> [cellText :=  show(snd x)]
+    treeViewSetModel autreeview audstore
 ----Diff treeview, used to show the result of a symebot update on a source
     difftreeview <- builderGetObject builder castToTreeView "diffDisplayTreeView"
     difftreeviewselect <- treeViewGetSelection difftreeview
@@ -221,7 +231,9 @@ symeui = do
     cellom <- builderGetObject builder castToCellRendererText "oldMethTreeViewCell"
     cellnm <- builderGetObject builder castToCellRendererText "newMethTreeViewCell"
     celltg <- builderGetObject builder castToCellRendererToggle "toggleTreeViewCell"
-    --TODO: Same as above
+    difstore <- listStoreNew [(RawO{titlep=""},True)]
+    treeViewSetModel difftreeview difstore
+
 -- Linking functions to signals
 -- Note that the only relevant signals here are those defined
 -- in the Gtk package documentation on Hackage. 
@@ -262,8 +274,7 @@ symeui = do
                                           putStrLn "Cancel signal received, hiding window."
                                           >> widgetHide dialogupd
                                     
-    qbttn `on` buttonActivated $ do
-                                    putStrLn "Saving data in storage..."
+    qbttn `on` buttonActivated $ do putStrLn "Saving data in storage..."
                                     rf <- readIORef methmap
                                     saveMapInFile rf "src/onche.cod"
                                     putStrLn "Quitting project Syme..."
@@ -273,14 +284,14 @@ symeui = do
                                                               ref <- readIORef methmap
                                                               if id == -1 
                                                                   then return()
-                                                              else case M.lookup id ref of Just r  -> textBufferSetText namebuffer (nom r)>>textBufferSetText fldbuffer (domaine r)>>textBufferSetText posbuffer (show(pos r))>>textBufferSetText orgnbuffer (origine r)>>textBufferSetText dscpbuffer (description r)>>textBufferSetText linkbuffer (lien r)
+                                                              else case M.lookup id ref of Just r  -> textBufferSetText namebuffer (nom r)>>textBufferSetText fldbuffer (domaine r)>>textBufferSetText orgnbuffer (origine r)>>textBufferSetText dscpbuffer (description r)>>textBufferSetText linkbuffer (lien r)
                                                                                            Nothing -> return()
 ---Update the treeview content 
     querytxt `on` editableChanged $ do ref <- readIORef methmap
                                        updateStore scbbx querytxt ref store      
 --Add method window signals
 ----Buttons
-    abttnadd `on` buttonActivated $ do newmeth <- registerMeth nametxtadd fldtxtadd postxtadd orgntxtadd dscptxtadd linktxtadd
+    abttnadd `on` buttonActivated $ do newmeth <- registerMeth nametxtadd fldtxtadd orgntxtadd dscptxtadd linktxtadd
                                        ref <- readIORef methmap
                                        putStrLn (show newmeth)
                                        listStoreAppend store (show((maxKeyInMap ref) + 1),(nom newmeth))
@@ -295,11 +306,11 @@ symeui = do
                                    ref <- readIORef methmap
                                    if id == -1
                                        then return()
-                                   else case M.lookup id ref of Just r  -> entrySetText nametxtmod (nom r)>>entrySetText fldtxtmod (domaine r)>>entrySetText postxtmod (show(pos r))>>entrySetText orgntxtmod (origine r)>>entrySetText dscptxtmod (description r)>>entrySetText linktxtmod (lien r)
+                                   else case M.lookup id ref of Just r  -> entrySetText nametxtmod (nom r)>>entrySetText fldtxtmod (domaine r)>>entrySetText orgntxtmod (origine r)>>entrySetText dscptxtmod (description r)>>entrySetText linktxtmod (lien r)
                                                                 Nothing -> return()
     mbttnmod `on` buttonActivated $ do id <- currentTvwSelectionID restreeview store
                                        ref <- readIORef methmap
-                                       modmeth <- registerMeth nametxtmod fldtxtmod postxtmod orgntxtmod dscptxtmod linktxtmod
+                                       modmeth <- registerMeth nametxtmod fldtxtmod orgntxtmod dscptxtmod linktxtmod
                                        listStoreSetValue store id (show(id),nom modmeth)
                                        atomicModifyIORef methmap (\m->(M.insert id modmeth m,())) 
                                     
@@ -321,27 +332,57 @@ symeui = do
 ----Buttons
     --TODO: get the id and date of the current row, launch symebot on it and
     --display results 
-    --abttnau `on` buttonActivated $ do id <- curretnTvwSelectionSource autreeview austore
-    --                               if error 
-    --                                  then dialogResponse dialogupd ResponseOk
-    --                               else do methsToUpdate <- getList id
-    --                                       parseres <- symeParse id methsToUpdate
-    --                                       handleDiff <- dialogRun dialogdif
-                                            --if handleDiff == ResponseOk
-                                            --    then putStrLn "Ok signal received, auto-update complete."
-                                            --    >> widgetHide dialogdif
-                                            --else
-                                            --    putStrLn "Cancel signal received, hiding window."
-                                            --    >> widgetHide dialogdif
+    abttnau `on` buttonActivated $ do url <- currentTvwSelectionURL autreeview audstore
+                                      if url == "NO_URL"
+                                               then dialogResponse dialogdif ResponseOk
+                                      else do parseres <- symeScrape ["file","test/fun-mooc.html"]
+                                              let a = convertOutToListStore parseres
+                                              listStoreClear difstore
+                                              listStoreAppend difstore (defO,False)
+                                              mapM_ (listStoreAppend difstore) a  
+                                              cellLayoutSetAttributes omcolumn cellom difstore $ \x -> [cellText :=  (titlep.fst $ x)]
+                                              cellLayoutSetAttributes selcolumn celltg difstore $ \x -> [cellToggleActive :=  snd x]
+                                              cellLayoutSetAttributes selcolumn celltg difstore $ \x -> [cellToggleActivatable :=  True]
+                                              handleDiff <- dialogRun dialogdif 
+                                              if handleDiff == ResponseOk
+                                                  then putStrLn "Ok signal received, auto-update complete." 
+                                                  >> widgetHide dialogdif
+                                              else 
+                                                  putStrLn "Cancel signal received, hiding window"
+                                                  >> widgetHide dialogdif
     qbttnau `on` buttonActivated $ dialogResponse dialogupd ResponseCancel
-----TreeView
-    --No particular signals
 --Diff window signals
 ----Buttons
-----TODO: compare the parsed methods and the new one, display the difference in
-----the textboxes, and allow the selection to be registered
-    --vsbttndiff `on` buttonActivated $ do registerSelection 
+    --Get the proposal that were ticked by the user, then register them in
+    --methref
+    --vsbttndiff `on` buttonActivated $ do url <- currentTvwSelectionURL autreeview audstore
+    --                                     dsl <- listStoreToList difstore
+    --                                     let tobs = Prelude.filter(\x->snd(x)==True) dsl
+    --                                     let nml = Prelude.map ((cmfo url).fst) tobs
+    --                                     chainAtomIO nml methmap                                         
+--atomicModifyIORef methmap (\m->((Prelude.map (addMethToMap nml)) m,())) 
+
     qbttndiff `on` buttonActivated $ dialogResponse dialogdif ResponseCancel
+----TreeView
+    difftreeviewselect `on` treeSelectionSelectionChanged $ do o <- ded difftreeview difstore
+                                                               textBufferSetText diffnamebuffer (titlep o)
+                                                               textBufferSetText difffldbuffer ((gnu.domp) o)
+                                                               textBufferSetText difforgnbuffer (univp o)
+                                                                 
 -- Start the window and initiate the GUI for use
     widgetShowAll window
     mainGUI
+
+gnu (x:xs) = x++gnu xs
+gnu [] = ""
+
+cmfo u o = Methode {nom=titlep o
+                  ,domaine= (gnu.domp) o
+                  ,origine=univp o
+                  ,lien=""
+                  ,description=""
+                  ,sourceName=u}
+chainAtomIO::[Methode] -> IORef (Map Int Methode) -> IO()
+chainAtomIO (x:xs) mr = do atomicModifyIORef mr (\m->(addMethToMap x m ,()))
+                           chainAtomIO xs mr
+chainAtomIO [] _      = return()

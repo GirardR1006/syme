@@ -35,10 +35,10 @@ getValLst (x:xs) = pop x:getValLst xs
 
 createMethFromVal :: String  --Record values (Strings separated with semicolons)
                   -> Methode 
-createMethFromVal [] = Methode {nom="",domaine="",origine=""
-                               , pos=read("(0,0)")::Position,description="",lien=""}
+createMethFromVal [] = Methode {nom="",domaine="",origine="",description=""
+                               ,lien="",sourceName=""}
 createMethFromVal l = Methode {nom=x!!0,domaine=x!!1,origine=x!!2
-                              , pos=read(x!!3)::Position,description=x!!4,lien=x!!5}
+                              ,description=x!!3,lien=x!!4,sourceName=x!!5}
                         where x = splitStr (==';') l
 
 --Generalized Prelude.words function, split a string according to a boolean
@@ -68,7 +68,8 @@ searchBy "Nom" s m = Map.differenceWith f m <$> (getBoolMap nom s m)
 searchBy "Domaine d'application" s m = Map.differenceWith f m <$> (getBoolMap domaine s m) 
 searchBy "Origine" s m = Map.differenceWith f m <$> (getBoolMap origine s m) 
 searchBy "Description" s m = Map.differenceWith f m <$> (getBoolMap description s m) 
-searchBy "Lien" s m = Map.differenceWith f m <$> (getBoolMap lien s m) 
+searchBy "Lien" s m = Map.differenceWith f m <$> (getBoolMap lien s m)
+searchBy "Source" s m = Map.differenceWith f m <$> (getBoolMap sourceName s m)  
 searchBy _ _ _ = Nothing
 --Get a boolean map returning True if s is contained within values of m, False
 --otherwise
@@ -94,8 +95,9 @@ saveMapInFile m fp = do
                       writeFile fp ""
                       mapM_ (appendFile fp) $ toBeWritten 
                         where stringRepresentation m =
-                                                    f(nom m) ++ ";" ++f(domaine m) ++
-                                                    ";" ++ f(origine m) ++ ";" ++
-                                                    show (pos m) ++";" ++
-                                                    f(description m) ++ ";" ++ f(lien m) ++ ";\n"
+                                                    f(nom m) ++ ";" ++ f(domaine m) 
+                                                    ++ ";" ++ f(origine m) 
+                                                    ++ ";" ++ f(description m) 
+                                                    ++ ";" ++ f(lien m) 
+                                                    ++ ";" ++ f(sourceName m) ++ ";\n"
                                                         where f m = if m == "" then " " else m

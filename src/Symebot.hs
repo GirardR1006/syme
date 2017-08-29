@@ -1,40 +1,40 @@
 {-# LANGUAGE OverloadedStrings #-}
 
---module Symebot(
---handleArgs
---) where
-
+module Symebot(
+ RawO(..)
+,defO 
+,symeScrape
+)
+where
 import Text.HTML.Scalpel
 import System.Environment
 import Data.List
 import Data.List.Split
 import Data.Time
 import Data.Maybe
-
 data RawO = RawO {titlep::String
                  ,univp::String
                  ,domp::[String]
                  ,fkeyp::String}
                  deriving (Show)
+defO = RawO {titlep="",univp="",domp=[""],fkeyp=""}
 
-main =  getArgs >>= handleArgs
-
-
-handleArgs [sourcetype,source] | sourcetype == "file" = scrapeFromFile source
+symeScrape [sourcetype,source] | sourcetype == "file" = scrapeFromFile source
                                | sourcetype == "url"  = scrapeFromURL source
-                               | otherwise            = print $ "Entrée: source, type de source"
-handleArgs _ = putStrLn "Erreur dans l'entrée"
+                               | otherwise            = print "succ"  >> return []
+symeScrape _ = print "Usage: handleArgs [file|url] fichier|url" >> return []
 
 scrapeFromFile fp = do  c <- readFile fp
                         let i = scrapeStringLike c apiResults
                         parseByFlavour fp i
 
 scrapeFromURL url = do  i <- scrapeURL url apiResults
+                        print i
                         parseByFlavour url i 
 
 --Ajouter ici les différentes stratégies de parsing
 parseByFlavour s i | "fun-mooc" `isInfixOf` s = do funmoocFlavour i
-                   | otherwise = print "no flavour configured for this input"
+                   | otherwise = print "no flavour configured for this input" >> return []
 
 --Stratégie pour le site fun-mooc. Cherche titre du cours, université, domaine
 --et clef étrangère et les renvoie sous forme de liste.
@@ -44,13 +44,8 @@ funmoocFlavour i = do let courses = separateCourses i
                       let univs = map (extractedContent "university_name") <$> courses
                       let fkeys = map (extractedContent "id") <$> courses
                       let domains =  fmap (map listOfDomains) lignedcourses
-                      time <- getCurrentTime
                       let fmOutput = rawData (fromMaybe [] titles) (fromMaybe [] univs) (fromMaybe [] domains) (fromMaybe [] fkeys)
-                      --print $  titles 
-                      --print $ fmap (!!1) univs
-                      --print $ fmap ((!!1).(!!1)) domains
-                      --print $ fmap (!!1) fkeys
-                      print $ fmOutput!!0
+                      return fmOutput
 
 rawData (x:xs) (y:ys) (z:zs) (f:fs) = RawO {titlep=(fromMaybe "NOTITLE" x)
                                            ,univp=(fromMaybe "NOUNIV" y)
@@ -63,7 +58,7 @@ extractedContent ::String           --Intitulé que l'on souhaite extraire
                 -> Maybe String     --Chaîne trouvée
 extractedContent f c = if l == [] 
                        then Nothing
-                       else Just (((!!1).(splitOn (f++"\":")).(!!0)) l)
+                       else Just (((filter (\x->x/='\"')).(!!1).(splitOn (f++"\":")).(!!0)) l)
                             where 
                             l = (filter (\x -> f `isInfixOf` x).lines) c
 --Extrait la liste des thématiques des MOOC depuis un JSon formatté sous forme
