@@ -10,7 +10,9 @@ where
 
 import Data.Aeson
 import qualified Data.ByteString.Lazy as B
+import qualified Data.HashMap.Lazy as H
 import Data.List
+import Data.Text
 import Network.HTTP.Conduit
 import System.Environment
 
@@ -32,11 +34,13 @@ instance FromJSON RawO where
 --Precious test function, to be used within ghci to test parsing strategies
 --before implementing them
 test = do  
-         let jSON = simpleHttp "https://www.fun-mooc.fr/fun/api/courses/?rpp=5000&page1"
-         d <- (eitherDecode <$> jSON ) :: IO (Either String RawOList)
-         case d of 
-           Left err -> putStrLn err
-           Right ps -> print (domp ((rawOList ps)!!1))        
+         let jSON = B.readFile "../test/fun-mooc-curl2"
+         Right d <- (eitherDecode <$> jSON ) :: IO (Either String RawOList)
+         let topic = (domp((rawOList d)!!0)) 
+         return topic
+         --case d of 
+         --  Left err -> putStrLn err
+         --  Right ps -> print (subjects ((rawOList ps)!!1))        
 --Default value of parsing result, used in various places of the program
 defO :: RawO
 defO = RawO {titlep="NO_RESULT",univp="",domp=[],fkeyp=(-1)}
@@ -54,7 +58,7 @@ scrapeFromURL url = do  let c = simpleHttp url
                         parseByFlavour url c 
 
 --Ajouter ici les différentes stratégies de parsing
-parseByFlavour s i | "fun-mooc" `isInfixOf` s = do funmoocFlavour i
+parseByFlavour s i | "fun-mooc" `Data.List.isInfixOf` s = do funmoocFlavour i
                    | otherwise = print "no flavour configured for this input" >> return []
 
 --Stratégie pour le site fun-mooc. Cherche titre du cours, université, domaine

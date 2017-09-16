@@ -7,11 +7,15 @@
 module SymeUI where
 
 import Control.Monad.Trans(liftIO)
+import Data.Aeson
 import Data.IORef
 import Graphics.UI.Gtk
 import Data.Text as T
 import Data.Maybe
 import Data.Map as M
+import Data.List 
+import Data.HashMap.Lazy as H
+import Data.ByteString.Lazy.UTF8 as L
 import Data.Time
 import MethManage
 import SourceManage
@@ -42,6 +46,27 @@ registerMeth nameE fldE orgnE dscpE linkE = do
                                                             ,lien=link
                                                             ,sourceName="utilisateur"} )
 
+currentTvwSelection :: TreeView -> ListStore (a) -> IO(Maybe(a))
+currentTvwSelection t m = do
+                        tvwS <- treeViewGetSelection t
+                        tvwP <- treeSelectionGetSelectedRows tvwS
+                        if tvwP == [] 
+                            then return(Nothing)
+                        else 
+                            do let s = Prelude.head (Prelude.head tvwP)
+                               v <- listStoreGetValue m s
+                               return (Just(v))
+
+toggleStuff t m = do
+    tvwS <- treeViewGetSelection t
+    tvwP <- treeSelectionGetSelectedRows tvwS
+    if tvwP == [] 
+        then return()
+    else 
+        do let s = Prelude.head (Prelude.head tvwP)
+           v <- listStoreGetValue m s
+           listStoreSetValue m s (fst v, not (snd v))
+
 currentTvwSelectionID :: TreeView -> ListStore (String,String) -> IO(Int) 
 currentTvwSelectionID t m = do
                         --TODO: take the model directly from the treeView
@@ -71,14 +96,14 @@ ded :: TreeView -> ListStore (RawO,Bool) -> IO(RawO)
 ded t m = do tvwS <- treeViewGetSelection t
              tvwP <- treeSelectionGetSelectedRows tvwS
              if tvwP == [] 
-                 then return(RawO{titlep=""})
+                 then return(defO)
              else 
                  do let s = Prelude.head (Prelude.head tvwP)
                     v <- listStoreGetValue m s
                     return $ fst v
 
 convertMapToListStore :: M.Map Int Methode -> [(String,String)]
-convertMapToListStore m = Prelude.map f (toList m)
+convertMapToListStore m = Prelude.map f (M.toList m)
     where f (a,b) = (show a,nom b)
 convertOutToListStore :: [RawO] -> [(RawO,Bool)]
 convertOutToListStore m = Prelude.map f m
@@ -231,7 +256,9 @@ symeui = do
     cellom <- builderGetObject builder castToCellRendererText "oldMethTreeViewCell"
     cellnm <- builderGetObject builder castToCellRendererText "newMethTreeViewCell"
     celltg <- builderGetObject builder castToCellRendererToggle "toggleTreeViewCell"
-    difstore <- listStoreNew [(RawO{titlep=""},True)]
+    difstore <- listStoreNew [(defO,True)]
+    cellLayoutSetAttributes omcolumn cellom difstore $ \x -> [cellText :=  (titlep.fst $ x)]
+    cellLayoutSetAttributes selcolumn celltg difstore $ \x -> [cellToggleActive :=  snd(x)]
     treeViewSetModel difftreeview difstore
 
 -- Linking functions to signals
@@ -330,19 +357,14 @@ symeui = do
     qbttndel `on` buttonActivated $ dialogResponse dialogdel ResponseCancel
 --Auto-update method window signals
 ----Buttons
-    --TODO: get the id and date of the current row, launch symebot on it and
-    --display results 
     abttnau `on` buttonActivated $ do url <- currentTvwSelectionURL autreeview audstore
                                       if url == "NO_URL"
                                                then dialogResponse dialogdif ResponseOk
-                                      else do parseres <- symeScrape ["file","test/fun-mooc.html"]
+                                      else do parseres <- symeScrape ["url",url]
                                               let a = convertOutToListStore parseres
                                               listStoreClear difstore
                                               listStoreAppend difstore (defO,False)
                                               mapM_ (listStoreAppend difstore) a  
-                                              cellLayoutSetAttributes omcolumn cellom difstore $ \x -> [cellText :=  (titlep.fst $ x)]
-                                              cellLayoutSetAttributes selcolumn celltg difstore $ \x -> [cellToggleActive :=  snd x]
-                                              cellLayoutSetAttributes selcolumn celltg difstore $ \x -> [cellToggleActivatable :=  True]
                                               handleDiff <- dialogRun dialogdif 
                                               if handleDiff == ResponseOk
                                                   then putStrLn "Ok signal received, auto-update complete." 
@@ -355,29 +377,38 @@ symeui = do
 ----Buttons
     --Get the proposal that were ticked by the user, then register them in
     --methref
-    --vsbttndiff `on` buttonActivated $ do url <- currentTvwSelectionURL autreeview audstore
-    --                                     dsl <- listStoreToList difstore
-    --                                     let tobs = Prelude.filter(\x->snd(x)==True) dsl
-    --                                     let nml = Prelude.map ((cmfo url).fst) tobs
-    --                                     chainAtomIO nml methmap                                         
---atomicModifyIORef methmap (\m->((Prelude.map (addMethToMap nml)) m,())) 
+    vsbttndiff `on` buttonActivated $ do url <- currentTvwSelectionURL autreeview audstore
+                                         dsl <- listStoreToList difstore
+                                         let tobs = Prelude.filter(\x->snd(x)==True) dsl
+                                         let nml = Prelude.map ((cmfo url).fst) tobs
+                                         chainAtomIO nml methmap     
 
     qbttndiff `on` buttonActivated $ dialogResponse dialogdif ResponseCancel
 ----TreeView
-    difftreeviewselect `on` treeSelectionSelectionChanged $ do o <- ded difftreeview difstore
-                                                               textBufferSetText diffnamebuffer (titlep o)
-                                                               textBufferSetText difffldbuffer ((gnu.domp) o)
-                                                               textBufferSetText difforgnbuffer (univp o)
-                                                                 
+    difftreeviewselect `on` treeSelectionSelectionChanged $ do 
+        o <- ded difftreeview difstore
+        textBufferSetText diffnamebuffer (titlep o)
+        textBufferSetText difffldbuffer ((show.domp) o)                                      
+        textBufferSetText difforgnbuffer (univp o)
+
+    a <- treeViewGetSelection difftreeview
+    b <- treeSelectionGetSelectedRows a
+    on celltg cellToggled $ \(b::[Char]) -> do toggleStuff difftreeview difstore
+
 -- Start the window and initiate the GUI for use
     widgetShowAll window
     mainGUI
-
-gnu (x:xs) = x++gnu xs
-gnu [] = ""
+--Function giving us a string representation of subjects
+--gnu :: [Object] -> String
+--gnu m = case Data.List.map (H.lookup "name") m of
+--          Just (x:xs) -> gnu xs
+--          Nothing  -> ""
+--gnu' :: Object -> String
+--gnu' (x:xs) = toString.encode x ++ ";" ++ gnu' xs
+--gnu' [] = " "
 
 cmfo u o = Methode {nom=titlep o
-                  ,domaine= (gnu.domp) o
+                  ,domaine= (show.domp) o
                   ,origine=univp o
                   ,lien=""
                   ,description=""

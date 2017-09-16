@@ -138,9 +138,11 @@
                 </child>
                 <child>
                   <object class="GtkTextView" id="diffnameTxt">
+                    <property name="width_request">600</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="editable">False</property>
+                    <property name="wrap_mode">word</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -162,9 +164,16 @@
                 </child>
                 <child>
                   <object class="GtkTextView" id="difffldTxt">
+                    <property name="width_request">600</property>
+                    <property name="height_request">-1</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <property name="halign">center</property>
+                    <property name="valign">center</property>
+                    <property name="hexpand">False</property>
+                    <property name="vexpand">False</property>
                     <property name="editable">False</property>
+                    <property name="wrap_mode">word</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -186,6 +195,7 @@
                 </child>
                 <child>
                   <object class="GtkTextView" id="difforgnTxt">
+                    <property name="width_request">600</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="editable">False</property>
@@ -210,6 +220,7 @@
                 </child>
                 <child>
                   <object class="GtkTextView" id="diffdscpTxt">
+                    <property name="width_request">600</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="editable">False</property>
@@ -234,6 +245,7 @@
                 </child>
                 <child>
                   <object class="GtkTextView" id="difflinkTxt">
+                    <property name="width_request">600</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="editable">False</property>
@@ -325,13 +337,16 @@
                 </child>
                 <child>
                   <object class="GtkTextView" id="nameTxt">
+                    <property name="width_request">600</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <property name="vexpand">True</property>
                     <property name="editable">False</property>
+                    <property name="wrap_mode">word</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
-                    <property name="fill">True</property>
+                    <property name="fill">False</property>
                     <property name="position">1</property>
                   </packing>
                 </child>
@@ -349,13 +364,16 @@
                 </child>
                 <child>
                   <object class="GtkTextView" id="fldTxt">
+                    <property name="width_request">600</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <property name="vexpand">True</property>
                     <property name="editable">False</property>
+                    <property name="wrap_mode">word</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
-                    <property name="fill">True</property>
+                    <property name="fill">False</property>
                     <property name="position">3</property>
                   </packing>
                 </child>
@@ -373,13 +391,16 @@
                 </child>
                 <child>
                   <object class="GtkTextView" id="orgnTxt">
+                    <property name="width_request">600</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <property name="vexpand">True</property>
                     <property name="editable">False</property>
+                    <property name="wrap_mode">word</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
-                    <property name="fill">True</property>
+                    <property name="fill">False</property>
                     <property name="position">7</property>
                   </packing>
                 </child>
@@ -397,13 +418,15 @@
                 </child>
                 <child>
                   <object class="GtkTextView" id="dscpTxt">
+                    <property name="width_request">600</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <property name="vexpand">True</property>
                     <property name="editable">False</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
-                    <property name="fill">True</property>
+                    <property name="fill">False</property>
                     <property name="position">9</property>
                   </packing>
                 </child>
@@ -421,13 +444,15 @@
                 </child>
                 <child>
                   <object class="GtkTextView" id="linkTxt">
+                    <property name="width_request">600</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <property name="vexpand">True</property>
                     <property name="editable">False</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
-                    <property name="fill">True</property>
+                    <property name="fill">False</property>
                     <property name="position">11</property>
                   </packing>
                 </child>
@@ -508,39 +533,46 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkTreeView" id="resultTreeView">
+                  <object class="GtkScrolledWindow">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <child internal-child="selection">
-                      <object class="GtkTreeSelection"/>
-                    </child>
+                    <property name="shadow_type">in</property>
                     <child>
-                      <object class="GtkTreeViewColumn" id="resultTreeViewColumn">
-                        <property name="title" translatable="yes">Nom</property>
-                        <child>
-                          <object class="GtkCellRendererText" id="resultTreeViewCell"/>
-                          <attributes>
-                            <attribute name="text">0</attribute>
-                          </attributes>
+                      <object class="GtkTreeView" id="resultTreeView">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <child internal-child="selection">
+                          <object class="GtkTreeSelection"/>
                         </child>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkTreeViewColumn" id="resultIDTreeViewColumn">
-                        <property name="title" translatable="yes">Identifiant</property>
                         <child>
-                          <object class="GtkCellRendererText" id="resultIDTreeViewCell"/>
-                          <attributes>
-                            <attribute name="text">0</attribute>
-                          </attributes>
+                          <object class="GtkTreeViewColumn" id="resultTreeViewColumn">
+                            <property name="title" translatable="yes">Nom</property>
+                            <child>
+                              <object class="GtkCellRendererText" id="resultTreeViewCell"/>
+                              <attributes>
+                                <attribute name="text">0</attribute>
+                              </attributes>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkTreeViewColumn" id="resultIDTreeViewColumn">
+                            <property name="title" translatable="yes">Identifiant</property>
+                            <child>
+                              <object class="GtkCellRendererText" id="resultIDTreeViewCell"/>
+                              <attributes>
+                                <attribute name="text">0</attribute>
+                              </attributes>
+                            </child>
+                          </object>
                         </child>
                       </object>
                     </child>
                   </object>
                   <packing>
-                    <property name="expand">True</property>
+                    <property name="expand">False</property>
                     <property name="fill">True</property>
-                    <property name="position">2</property>
+                    <property name="position">1</property>
                   </packing>
                 </child>
               </object>
