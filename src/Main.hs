@@ -1,11 +1,6 @@
 module Main where
 
-import Control.Monad.Trans(liftIO)
-import Graphics.UI.Gtk
-import Data.Map as M
 import SymeUI
-import Methodinno
-import MethManage
 
 main= do symeui
 

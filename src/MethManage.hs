@@ -4,13 +4,16 @@ Provide data read and write features, as well as research features.
 --}
 module MethManage 
 (searchBy
-,splitStr
+,getIdLst
+,getValLst
+,createMethFromVal
 ,getMapMeth
 ,addMethToMap
 ,saveMapInFile
 ,maxKeyInMap
 ) where
 import Data.List
+import Data.List.Split
 import qualified Data.Map as Map
 import System.IO
 import System.Environment
@@ -20,40 +23,31 @@ import Methodinno
 
 --Some helper function to parse methods from file
 
-getIdLst :: [String] --Lines from file
+getIdLst :: [[String]] --Lines from file
          -> [String] --List of IDs
 getIdLst [] = []
-getIdLst (x:xs) = [head x]:getIdLst xs
+getIdLst (x:xs) = head x:getIdLst xs
 
-getValLst :: [String] --Lines from file
-          -> [String] --List of record values 
-getValLst [] = []
-getValLst (x:xs) = pop x:getValLst xs
-                where
-                    pop [] = []
-                    pop (x:xs) = xs
+getValLst :: [[String]] --Lines from file
+          -> [[String]] --List of record values 
+getValLst l = map pop l
 
-createMethFromVal :: String  --Record values (Strings separated with semicolons)
+pop [] = []
+pop (x:xs) = xs
+
+createMethFromVal :: [String]  --Record values (Strings separated with semicolons)
                   -> Methode 
 createMethFromVal [] = Methode {nom="",domaine="",origine="",description=""
                                ,lien="",sourceName=""}
-createMethFromVal l = Methode {nom=x!!0,domaine=x!!1,origine=x!!2
-                              ,description=x!!3,lien=x!!4,sourceName=x!!5}
-                        where x = splitStr (==';') l
-
---Generalized Prelude.words function, split a string according to a boolean
---predicate 
-splitStr     :: (Char -> Bool) -> String -> [String]
-splitStr p s =  case dropWhile p s of
-                      "" -> []
-                      s' -> w : splitStr p s''
-                            where (w, s'') = break p s'
+createMethFromVal l = Methode {nom=l!!0,domaine=l!!1,origine=l!!2
+                              ,description=l!!3,lien=l!!4,sourceName=l!!5}
 
 --Parse a file into a map of Methodes
-getMapMeth fp = do
+getMapMeth fp = do 
                  lc <- fmap lines $ readFile fp
-                 let idLst = getIdLst lc
-                 let vaLst = getValLst lc
+                 let splc = map (splitOn(";")) lc
+                 let idLst = getIdLst splc
+                 let vaLst = getValLst splc
                  let methLst = Prelude.map createMethFromVal vaLst
                  let lm =  zipWith (\key values -> (read(key) :: Int,values)) idLst methLst
                  let mapMeth = Map.fromList lm

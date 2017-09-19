@@ -2,6 +2,8 @@
 
 {--
     GUI handling.
+    A FAIRE: Le programme compile, mais il y a des soucis dans l'enregistrement. 
+    Les noms sont mal enregistrés et les données ne semblent pas lues en entier.
 --}
 
 module SymeUI where
