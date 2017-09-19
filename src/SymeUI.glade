@@ -302,8 +302,6 @@
   <object class="GtkWindow" id="mainWindow">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
-    <property name="default_width">265</property>
-    <property name="default_height">200</property>
     <signal name="delete-event" handler="delete" swapped="no"/>
     <child>
       <object class="GtkBox" id="mainBox">
@@ -315,7 +313,6 @@
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="margin_bottom">63</property>
-            <property name="spacing">5</property>
             <property name="homogeneous">True</property>
             <child>
               <object class="GtkBox" id="displayBox">
@@ -468,6 +465,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="orientation">vertical</property>
+                <property name="homogeneous">True</property>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">True</property>
@@ -537,6 +535,8 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="shadow_type">in</property>
+                    <property name="min_content_height">180</property>
+                    <property name="propagate_natural_height">True</property>
                     <child>
                       <object class="GtkTreeView" id="resultTreeView">
                         <property name="visible">True</property>
@@ -593,10 +593,6 @@
           <object class="GtkButtonBox" id="commandBox">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="margin_left">10</property>
-            <property name="margin_right">10</property>
-            <property name="spacing">20</property>
-            <property name="homogeneous">True</property>
             <property name="layout_style">start</property>
             <child>
               <object class="GtkButton" id="addBttn">
@@ -605,11 +601,11 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
+                <property name="halign">start</property>
               </object>
               <packing>
                 <property name="expand">True</property>
                 <property name="fill">True</property>
-                <property name="padding">10</property>
                 <property name="position">0</property>
               </packing>
             </child>
@@ -619,6 +615,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
+                <property name="halign">start</property>
               </object>
               <packing>
                 <property name="expand">True</property>
@@ -627,17 +624,18 @@
               </packing>
             </child>
             <child>
-              <object class="GtkButton" id="quitBttn">
-                <property name="label" translatable="yes">Sauvegarder et quitter</property>
+              <object class="GtkButton" id="autBttn">
+                <property name="label" translatable="yes">Enregistrement
+automatique </property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
+                <property name="halign">start</property>
               </object>
               <packing>
                 <property name="expand">True</property>
                 <property name="fill">True</property>
                 <property name="position">2</property>
-                <property name="secondary">True</property>
               </packing>
             </child>
             <child>
@@ -646,29 +644,34 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">3</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkButton" id="autBttn">
-                <property name="label" translatable="yes">Enregistrement automatique </property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
+                <property name="halign">end</property>
               </object>
               <packing>
                 <property name="expand">True</property>
                 <property name="fill">True</property>
                 <property name="position">4</property>
+                <property name="secondary">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="quitBttn">
+                <property name="label" translatable="yes">Sauvegarder 
+et quitter</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="halign">end</property>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">6</property>
+                <property name="secondary">True</property>
               </packing>
             </child>
           </object>
           <packing>
-            <property name="expand">False</property>
+            <property name="expand">True</property>
             <property name="fill">True</property>
             <property name="position">1</property>
           </packing>
