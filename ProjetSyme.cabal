@@ -33,7 +33,6 @@ executable ProjetSyme
                      , gtk3>=0.14 
                      , mtl
                      , glib>=0.13.4.1
-                     , scalpel>=0.5
                      , time>=1.6
                      , split>=0.2
                      , aeson>=1.2

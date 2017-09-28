@@ -390,8 +390,8 @@ symeui = do
     difftreeviewselect `on` treeSelectionSelectionChanged $ do 
         o <- ded difftreeview difstore
         textBufferSetText diffnamebuffer (titlep o)
-        textBufferSetText difffldbuffer ((show.domp) o)                                      
-        textBufferSetText difforgnbuffer (univp o)
+        textBufferSetText difffldbuffer (domainp o)                                      
+        textBufferSetText difforgnbuffer (originep o)
 
     a <- treeViewGetSelection difftreeview
     b <- treeSelectionGetSelectedRows a
@@ -410,11 +410,11 @@ symeui = do
 --gnu' [] = " "
 
 cmfo u o = Methode {nom=titlep o
-                  ,domaine= (show.domp) o
-                  ,origine=univp o
-                  ,lien=""
-                  ,description=""
-                  ,sourceName=u}
+                   ,domaine=domainp  o
+                   ,origine=originep o
+                   ,lien=lienp o
+                   ,description=descriptionp o
+                   ,sourceName=u}
 chainAtomIO::[Methode] -> IORef (Map Int Methode) -> IO()
 chainAtomIO (x:xs) mr = do atomicModifyIORef mr (\m->(addMethToMap x m ,()))
                            chainAtomIO xs mr
