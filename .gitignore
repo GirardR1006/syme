@@ -1,6 +1,7 @@
 bin/
 dist/
 doc/
+test/
 ChangeLog.md
 *.o
 *.hi
@@ -9,3 +10,9 @@ ChangeLog.md
 *.txt
 *.cod
 sources
+
+src/SymeUINew\.hs
+
+src/TODO
+
+src/onche\.cod\.backup
