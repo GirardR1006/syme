@@ -17,7 +17,9 @@ import Network.HTTP.Conduit
 import System.Environment
 -- Instance to create a RawO from a parsed value
 class WannabeRawO a where 
-  crRawO :: a -> RawO 
+  crRawO :: a -> RawO
+--Sanitizer function
+si = Data.List.filter ((&&) <$> (/='\n') <*> (/=';'))
 -- raw output type, created by collection of different parsed sources
 data RawO = RawO {titlep::String
                  ,domainp::String
@@ -39,8 +41,11 @@ instance FromJSON Funmooc where
              <*> v.: "university_name"
              <*> v.: "subjects"
 instance WannabeRawO Funmooc where
-  crRawO f = RawO {titlep=(titlefnmc f),domainp=show(domfnmc f),originep=(univfnmc f)
-                  ,descriptionp="",lienp=""} 
+  crRawO f = RawO {titlep=(titlefnmc f)
+                  ,domainp=show(domfnmc f)
+                  ,originep=(univfnmc f)
+                  ,descriptionp=""
+                  ,lienp=""} 
 ---- type for parsing coursera API
 newtype CourseraList = CourseraList {courseraList::[Coursera]} deriving(Show)
 instance FromJSON CourseraList where
@@ -55,8 +60,11 @@ instance FromJSON Coursera where
              <*> v .: "domainTypes"
              <*> v .: "description"
 instance WannabeRawO Coursera where
-  crRawO f = RawO {titlep=(titlecrsr f),domainp=show(domcrsr f),originep=""
-                  ,descriptionp=(descriptioncrsr f),lienp=""} 
+  crRawO f = RawO {titlep=(si.titlecrsr) f
+                  ,domainp=si(show(domcrsr f))
+                  ,originep=""
+                  ,descriptionp=(si.descriptioncrsr) f
+                  ,lienp=""} 
 ---- type for parsing udacity API
 newtype UdacityList = UdacityList {udacityList::[Udacity]} deriving(Show)
 instance FromJSON UdacityList where
@@ -73,10 +81,10 @@ instance FromJSON Udacity where
             <*> v .: "homepage"
             <*> v .: "summary"
 instance WannabeRawO Udacity where
-  crRawO f = RawO {titlep=((titleudct f) ++ " - " ++ (subtitleudct f))
+  crRawO f = RawO {titlep=(si((titleudct f) ++ " - " ++ (subtitleudct f)))
                   ,domainp="",originep=""
-                  ,descriptionp=(descriptionudct f)
-                  ,lienp=urludct f} 
+                  ,descriptionp=(si.descriptionudct) f
+                  ,lienp=(si.urludct) f} 
 --Precious test function, to be used within ghci to test parsing strategies
 --before implementing them
 test = do  
@@ -97,26 +105,23 @@ scrapeFromFile fp = do  let c = B.readFile fp
 
 scrapeFromURL url = do  let c = simpleHttp url
                         parseByFlavour url c 
-
---Ajouter ici les différentes stratégies de parsing
+--Add here different parsing strategies
 parseByFlavour s i | "fun-mooc" `Data.List.isInfixOf` s = do funmoocFlavour i
                    | "coursera" `Data.List.isInfixOf` s = do courseraFlavour i
                    | "udacity"  `Data.List.isInfixOf` s = do udacityFlavour i
                    | otherwise = print "no flavour configured for this input" >> return []
-
-----Stratégie pour le site fun-mooc.
+--TODO: filter all output to remove \n and ';' in descriptions
+--Also, why the heck do we have a shift in written fields for coursera stuff? 
 funmoocFlavour i = do d <- (eitherDecode <$> i) :: IO (Either String FunmoocList)
                       case d of 
                         Left err -> return [defO]
                         Right ps -> return (Data.List.map crRawO (funmoocList ps))
 
-----Stratégie pour le site coursera.
 courseraFlavour i = do d <- (eitherDecode <$> i) :: IO (Either String CourseraList)
                        case d of 
                          Left err -> return [defO]
                          Right ps -> return (Data.List.map crRawO (courseraList ps))
 
-----Stratégie pour le site udacity.
 udacityFlavour i = do d <- (eitherDecode <$> i) :: IO (Either String UdacityList)
                       case d of 
                         Left err -> return [defO]

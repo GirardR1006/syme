@@ -1,0 +1,63 @@
+Preprocessing executable 'ProjetSyme' for ProjetSyme-0.1.0.0...
+Running ProjetSyme...
+selected url: https://www.fun-mooc.fr/fun/api/courses/?rpp=5000&page1
+(RawO {titlep = "", univp = "", domp = [""], fkeyp = ""},True)
+(RawO {titlep = " Des rivi\232res et des hommes : hydrologie, hydraulique et g\233omorphologie,", univp = " Communaut\233 Universit\233 Grenoble Alpes,", domp = ["                }","                    \"name\": \"Sciences pour l'ing\233nieur\"","                    \"id\": 103,","                {","                },","                    \"name\": \"Sciences de la vie\"","                    \"id\": 97,","                {","                },","                    \"name\": \"Sciences de la Terre et de l'Univers\"","                    \"id\": 94,","                {","                },","                    \"name\": \"Enjeux de soci\233t\233\"","                    \"id\": 25,","                {","                },","                    \"name\": \"D\233veloppement durable\"","                    \"id\": 115,","                {","                },","                    \"name\": \"Environnement\"","                    \"id\": 34,","                {"], fkeyp = " 2735,"},False)
+(RawO {titlep = " Cr\233ation d'entreprises innovantes : de l'id\233e \224 la start-up,", univp = " Universit\233 de Montpellier,", domp = ["                }","                    \"name\": \"Innovation\"","                    \"id\": 46,","                {","                },","                    \"name\": \"Entrepreneuriat\"","                    \"id\": 31,","                {"], fkeyp = " 2644,"},False)
+(RawO {titlep = " La sculpture grecque d'Alexandre \224 Cl\233op\226tre (Partie I),", univp = " \201cole Pratique des Hautes \201tudes,", domp = ["                }","                    \"name\": \"Histoire\"","                    \"id\": 40,","                {","                },","                    \"name\": \"Cultures et civilisations\"","                    \"id\": 13,","                {","                },","                    \"name\": \"Cr\233ation, arts et design\"","                    \"id\": 10,","                {","                },","                    \"name\": \"Sciences humaines et sociales\"","                    \"id\": 100,","                {"], fkeyp = " 2632,"},False)
+(RawO {titlep = " Math\233matiques : pr\233paration \224 l'entr\233e dans l'enseignement sup\233rieur,", univp = " Ecole Polytechnique,", domp = ["                }","                    \"name\": \"Math\233matiques et statistiques\"","                    \"id\": 58,","                {","                },","                    \"name\": \"Education et formation\"","                    \"id\": 28,","                {"], fkeyp = " 2509,"},False)
+Cancel signal received, hiding window
+Cancel signal received, hiding window.
+selected item: Projet personnel - test driven development with ID 6
+selected item: Formations en petit comité with ID 5
+selected item: Étude de cas with ID 4
+selected item: Formations en petit comité with ID 5
+selected item: Projet personnel - test driven development with ID 6
+selected item: Formations en petit comité with ID 5
+Preprocessing executable 'ProjetSyme' for ProjetSyme-0.1.0.0...
+[5 of 6] Compiling SymeUI           ( src/SymeUI.hs, dist/build/ProjetSyme/ProjetSyme-tmp/SymeUI.o )
+[6 of 6] Compiling Main             ( src/Main.hs, dist/build/ProjetSyme/ProjetSyme-tmp/Main.o ) [SymeUI changed]
+Linking dist/build/ProjetSyme/ProjetSyme ...
+Running ProjetSyme...
+selected url: https://www.fun-mooc.fr/fun/api/courses/?rpp=5000&page1
+"THIS IS BOUDI(RawO {titlep = \"\", univp = \"\", domp = [\"\"], fkeyp = \"\"},True)"
+"THIS IS BOUDI(RawO {titlep = \" Math\\233matiques : pr\\233paration \\224 l'entr\\233e dans l'enseignement sup\\233rieur,\", univp = \" Ecole Polytechnique,\", domp = [\"                }\",\"                    \\\"name\\\": \\\"Math\\233matiques et statistiques\\\"\",\"                    \\\"id\\\": 58,\",\"                {\",\"                },\",\"                    \\\"name\\\": \\\"Education et formation\\\"\",\"                    \\\"id\\\": 28,\",\"                {\"], fkeyp = \" 2509,\"},False)"
+"THIS IS BOUDI(RawO {titlep = \" La sculpture grecque d'Alexandre \\224 Cl\\233op\\226tre (Partie I),\", univp = \" \\201cole Pratique des Hautes \\201tudes,\", domp = [\"                }\",\"                    \\\"name\\\": \\\"Histoire\\\"\",\"                    \\\"id\\\": 40,\",\"                {\",\"                },\",\"                    \\\"name\\\": \\\"Cultures et civilisations\\\"\",\"                    \\\"id\\\": 13,\",\"                {\",\"                },\",\"                    \\\"name\\\": \\\"Cr\\233ation, arts et design\\\"\",\"                    \\\"id\\\": 10,\",\"                {\",\"                },\",\"                    \\\"name\\\": \\\"Sciences humaines et sociales\\\"\",\"                    \\\"id\\\": 100,\",\"                {\"], fkeyp = \" 2632,\"},False)"
+"THIS IS BOUDI(RawO {titlep = \" Cr\\233ation d'entreprises innovantes : de l'id\\233e \\224 la start-up,\", univp = \" Universit\\233 de Montpellier,\", domp = [\"                }\",\"                    \\\"name\\\": \\\"Innovation\\\"\",\"                    \\\"id\\\": 46,\",\"                {\",\"                },\",\"                    \\\"name\\\": \\\"Entrepreneuriat\\\"\",\"                    \\\"id\\\": 31,\",\"                {\"], fkeyp = \" 2644,\"},False)"
+"THIS IS BOUDI(RawO {titlep = \" Des rivi\\232res et des hommes : hydrologie, hydraulique et g\\233omorphologie,\", univp = \" Communaut\\233 Universit\\233 Grenoble Alpes,\", domp = [\"                }\",\"                    \\\"name\\\": \\\"Sciences pour l'ing\\233nieur\\\"\",\"                    \\\"id\\\": 103,\",\"                {\",\"                },\",\"                    \\\"name\\\": \\\"Sciences de la vie\\\"\",\"                    \\\"id\\\": 97,\",\"                {\",\"                },\",\"                    \\\"name\\\": \\\"Sciences de la Terre et de l'Univers\\\"\",\"                    \\\"id\\\": 94,\",\"                {\",\"                },\",\"                    \\\"name\\\": \\\"Enjeux de soci\\233t\\233\\\"\",\"                    \\\"id\\\": 25,\",\"                {\",\"                },\",\"                    \\\"name\\\": \\\"D\\233veloppement durable\\\"\",\"                    \\\"id\\\": 115,\",\"                {\",\"                },\",\"                    \\\"name\\\": \\\"Environnement\\\"\",\"                    \\\"id\\\": 34,\",\"                {\"], fkeyp = \" 2735,\"},False)"
+"THIS IS BOUDI(RawO {titlep = \" Comprendre les addictions,\", univp = \" Universit\\233 Paris-Sud,\", domp = [\"                }\",\"                    \\\"name\\\": \\\"Sciences de la vie\\\"\",\"                    \\\"id\\\": 97,\",\"                {\",\"                },\",\"                    \\\"name\\\": \\\"Sciences\\\"\",\"                    \\\"id\\\": 88,\",\"                {\",\"                },\",\"                    \\\"name\\\": \\\"Sant\\233\\\"\",\"                    \\\"id\\\": 85,\",\"                {\"], fkeyp = \" 2772,\"},False)"
+Cancel signal received, hiding window
+Cancel signal received, hiding window.
+Preprocessing executable 'ProjetSyme' for ProjetSyme-0.1.0.0...
+[5 of 6] Compiling SymeUI           ( src/SymeUI.hs, dist/build/ProjetSyme/ProjetSyme-tmp/SymeUI.o )
+Linking dist/build/ProjetSyme/ProjetSyme ...
+Running ProjetSyme...
+selected url: https://www.fun-mooc.fr/fun/api/courses/?rpp=5000&page1
+"THIS IS BOUDITrue"
+"THIS IS BOUDIFalse"
+"THIS IS BOUDIFalse"
+"THIS IS BOUDIFalse"
+"THIS IS BOUDITrue"
+Cancel signal received, hiding window
+Cancel signal received, hiding window.
+Preprocessing executable 'ProjetSyme' for ProjetSyme-0.1.0.0...
+Running ProjetSyme...
+selected url: https://www.fun-mooc.fr/fun/api/courses/?rpp=5000&page1
+"THIS IS BOUDITrue"
+"THIS IS BOUDIFalse"
+Cancel signal received, hiding window
+Cancel signal received, hiding window.
+Preprocessing executable 'ProjetSyme' for ProjetSyme-0.1.0.0...
+Running ProjetSyme...
+selected url: https://www.fun-mooc.fr/fun/api/courses/?rpp=5000&page1
+"THIS IS BOUDITrue"
+"THIS IS BOUDIFalse"
+"THIS IS BOUDIFalse"
+"THIS IS BOUDITrue"
+"THIS IS BOUDITrue"
+"THIS IS BOUDIFalse"
+"THIS IS BOUDIFalse"
+"THIS IS BOUDITrue"
+"THIS IS BOUDITrue"
+Cancel signal received, hiding window
+Cancel signal received, hiding window.

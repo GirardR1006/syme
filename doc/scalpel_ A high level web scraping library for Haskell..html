@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<!-- saved from url=(0043)https://hackage.haskell.org/package/scalpel -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" href="./scalpel_ A high level web scraping library for Haskell._files/hackage.css" type="text/css">
+<link rel="search" type="application/opensearchdescription+xml" title="Hackage" href="https://hackage.haskell.org/packages/opensearch.xml">
+  <title>
+    scalpel: A high level web scraping library for Haskell.
+  </title>
+  <link rel="canonical" href="https://hackage.haskell.org/package/scalpel">
+</head>
+
+<body>
+  <div id="page-header">
+
+<ul class="links" id="page-menu">
+
+    <li><a href="https://hackage.haskell.org/">Home</a></li>
+
+    <li>
+      <form action="https://hackage.haskell.org/packages/search" method="get" class="search">
+        <button type="submit">Search&nbsp;</button>
+        <input type="text" name="terms">
+      </form>
+    </li>
+
+    <li><a href="https://hackage.haskell.org/packages/">Browse</a></li>
+
+    <li><a href="https://hackage.haskell.org/packages/recent">What's new</a></li>
+
+    <li><a href="https://hackage.haskell.org/upload">Upload</a></li>
+
+    <li><a href="https://hackage.haskell.org/accounts">User accounts</a></li>
+
+</ul>
+
+
+    <a class="caption" href="https://hackage.haskell.org/package/scalpel">
+    scalpel: A high level web scraping library for Haskell.
+    </a>
+
+
+</div>
+
+  <div id="content">
+
+    <h1>The scalpel package</h1>
+    <div style="font-size: small">
+      [<a href="https://hackage.haskell.org/packages/tags">Tags</a>:<a href="https://hackage.haskell.org/packages/tag/apache">apache</a>, <a href="https://hackage.haskell.org/packages/tag/library">library</a>]
+    </div>
+
+    
+
+    <div id="description">
+        <p>Scalpel is a web scraping library inspired by libraries like Parsec and
+Perl's Web::Scraper Scalpel builds on top of TagSoup to provide a
+declarative and monadic interface.</p>
+    
+    </div>
+
+        <hr>
+    [<a href="https://hackage.haskell.org/package/scalpel#readme">Skip to Readme</a>]
+    
+
+    <div id="properties">
+    <h2>Properties</h2>
+    <table class="properties">
+      <tbody>
+
+        <tr>
+          <th>Versions</th>
+          <td><a href="https://hackage.haskell.org/package/scalpel-0.1.0">0.1.0</a>, <a href="https://hackage.haskell.org/package/scalpel-0.1.1">0.1.1</a>, <a href="https://hackage.haskell.org/package/scalpel-0.1.2">0.1.2</a>, <a href="https://hackage.haskell.org/package/scalpel-0.1.3">0.1.3</a>, <a href="https://hackage.haskell.org/package/scalpel-0.1.3.1">0.1.3.1</a>, <a href="https://hackage.haskell.org/package/scalpel-0.2.0">0.2.0</a>, <a href="https://hackage.haskell.org/package/scalpel-0.2.0.1">0.2.0.1</a>, <a href="https://hackage.haskell.org/package/scalpel-0.2.1">0.2.1</a>, <a href="https://hackage.haskell.org/package/scalpel-0.2.1.1">0.2.1.1</a>, <a href="https://hackage.haskell.org/package/scalpel-0.3.0">0.3.0</a>, <a href="https://hackage.haskell.org/package/scalpel-0.3.0.1">0.3.0.1</a>, <a href="https://hackage.haskell.org/package/scalpel-0.3.1">0.3.1</a>, <a href="https://hackage.haskell.org/package/scalpel-0.4.0">0.4.0</a>, <a href="https://hackage.haskell.org/package/scalpel-0.4.1">0.4.1</a>, <a href="https://hackage.haskell.org/package/scalpel-0.5.0">0.5.0</a>, <strong>0.5.1</strong></td>
+        </tr>
+
+                <tr>
+          <th>Change log</th>
+          <td><a href="https://hackage.haskell.org/package/scalpel-0.5.1/changelog">CHANGELOG.md</a></td>
+        </tr>
+        
+
+        <tr>
+          <th>Dependencies</th>
+          <td><a href="https://hackage.haskell.org/package/base">base</a> (&gt;=4.6 &amp;&amp; &lt;5), <a href="https://hackage.haskell.org/package/bytestring">bytestring</a>, <a href="https://hackage.haskell.org/package/curl">curl</a> (&gt;=1.3.4), <a href="https://hackage.haskell.org/package/data-default">data-default</a>, <a href="https://hackage.haskell.org/package/scalpel-core">scalpel-core</a> (==0.5.1), <a href="https://hackage.haskell.org/package/tagsoup">tagsoup</a> (&gt;=0.12.2), <a href="https://hackage.haskell.org/package/text">text</a><span style="font-size: small"> [<a href="https://hackage.haskell.org/package/scalpel-0.5.1/dependencies">details</a>]</span></td>
+        </tr>
+
+        <tr>
+          <th>License</th>
+          <td><a href="https://hackage.haskell.org/package/scalpel-0.5.1/src/LICENSE">Apache-2.0</a></td>
+        </tr>
+
+        
+
+        <tr>
+          <th>Author</th>
+          <td>Will Coster</td>
+        </tr>
+        <tr>
+          <th>Maintainer</th>
+          <td>willcoster@gmail.com</td>
+        </tr>
+
+        <!-- Obsolete/deprecated 'Stability' field hidden
+             c.f. http://stackoverflow.com/questions/3841218/conventions-for-stability-field-of-cabal-packages
+        <tr>
+          <th>Stability</th>
+          <td>Unknown</td>
+        </tr>
+        -->
+
+                <tr>
+          <th>Category</th>
+          <td><a href="https://hackage.haskell.org/packages/#cat:Web">Web</a></td>
+        </tr>
+        
+
+                <tr>
+          <th>Home page</th>
+          <td>
+            <a href="https://github.com/fimad/scalpel">
+              https://github.com/fimad/scalpel
+            </a>
+          </td>
+        </tr>
+        
+
+        
+
+                <tr>
+          <th>Source repository</th>
+          <td>head: git clone <a href="https://github.com/fimad/scalpel.git">https://github.com/fimad/scalpel.git</a><br>this: git clone <a href="https://github.com/fimad/scalpel.git">https://github.com/fimad/scalpel.git</a>(tag v0.5.1)</td>
+        </tr>
+        
+
+        <tr>
+          <th>Uploaded</th>
+          <td>Tue Apr 25 03:14:56 UTC 2017 by <a href="https://hackage.haskell.org/user/fimad">fimad</a></td>
+        </tr>
+
+        
+
+                <tr>
+          <th>Distributions</th>
+          <td>LTSHaskell:<a href="https://www.stackage.org/package/scalpel">0.5.1</a>, NixOS:<a href="http://hydra.nixos.org/job/nixpkgs/trunk/haskellPackages.scalpel.x86_64-linux">0.5.1</a>, Stackage:<a href="https://www.stackage.org/package/scalpel">0.5.1</a>, Tumbleweed:<a href="https://build.opensuse.org/package/show/devel:languages:haskell/ghc-scalpel">0.5.1</a></td>
+        </tr>
+        
+
+        <tr>
+          <th>Downloads</th>
+          <td>1766 total (52 in the last 30 days)</td>
+        </tr>
+
+        <tr>
+          <th>Votes</th>
+          <td><form action="https://hackage.haskell.org/package/scalpel/votes" method="POST"><span>0 [<input type="hidden" name="_method" id="_method" value="PUT"><input type="submit" value="Vote for this package" class="text-button">]</span></form></td>
+        </tr>
+        <tr>
+          <th>Status</th>
+	  <td>Docs available <span style="font-size: small">[<a href="https://hackage.haskell.org/package/scalpel-0.5.1/reports/1">build log</a>]</span><br>Last success reported on 2017-04-25 <span style="font-size: small">[<a href="https://hackage.haskell.org/package/scalpel-0.5.1/reports/">all 1 reports</a>]</span><br><a href="https://matrix.hackage.haskell.org/package/scalpel">Hackage Matrix CI</a></td>
+        </tr>
+      </tbody>
+    </table>
+    </div> <!-- /properties -->
+
+    <div id="modules">
+      <h2>Modules</h2><div id="module-list"><ul class="modules"><li><i>Text</i><ul class="modules"><li><i>HTML</i><ul class="modules"><li><span class="module"><a href="https://hackage.haskell.org/package/scalpel-0.5.1/docs/Text-HTML-Scalpel.html">Text.HTML.Scalpel</a></span></li></ul></li></ul></li></ul></div><p style="font-size: small">[<a href="https://hackage.haskell.org/package/scalpel-0.5.1/docs/doc-index.html">Index</a>]</p>
+    </div>
+
+    
+
+    <div id="downloads">
+      <h2>Downloads</h2><ul><li><a href="https://hackage.haskell.org/package/scalpel-0.5.1/scalpel-0.5.1.tar.gz">scalpel-0.5.1.tar.gz</a> [<a href="https://hackage.haskell.org/package/scalpel-0.5.1/src/">browse</a>] (Cabal source package)</li><li><a href="https://hackage.haskell.org/package/scalpel-0.5.1/scalpel.cabal">Package description</a> (included in the package)</li></ul>
+    </div>
+
+    <div id="maintainer-corner">
+      <h4>Maintainer's Corner</h4>
+      <p>For package maintainers and hackage trustees</p>
+      <ul>
+        <li>
+          <a href="https://hackage.haskell.org/package/scalpel/maintain">
+            edit package information
+          </a>
+        </li>
+      </ul>
+    </div>
+
+        <div id="readme-container">
+      <h2 id="readme">Readme for scalpel</h2>
+      <h2 id="readme">Readme for scalpel-0.5.1</h2><div class="embedded-author-content"><h1>Scalpel <a href="https://travis-ci.org/fimad/scalpel"><img src="./scalpel_ A high level web scraping library for Haskell._files/scalpel.svg" alt="Build Status"></a> <a href="https://hackage.haskell.org/package/scalpel"><img src="./scalpel_ A high level web scraping library for Haskell._files/scalpel(1).svg" alt="Hackage"></a></h1>
+<p>Scalpel is a web scraping library inspired by libraries like
+<a href="http://hackage.haskell.org/package/parsec-3.1.7/docs/Text-Parsec.html">Parsec</a>
+and Perl's <a href="http://search.cpan.org/~miyagawa/Web-Scraper-0.38/">Web::Scraper</a>.
+Scalpel builds on top of <a href="http://hackage.haskell.org/package/tagsoup">TagSoup</a>
+to provide a declarative and monadic interface.</p>
+<p>There are two general mechanisms provided by this library that are used to build
+web scrapers: Selectors and Scrapers.</p>
+<h2>Selectors</h2>
+<p>Selectors describe a location within an HTML DOM tree. The simplest selector,
+that can be written is a simple string value. For example, the selector
+<code>"div"</code> matches every single div node in a DOM. Selectors can be combined
+using tag combinators. The <code>//</code> operator to define nested relationships within a
+DOM tree. For example, the selector <code>"div" // "a"</code> matches all anchor tags
+nested arbitrarily deep within a div tag.</p>
+<p>In addition to describing the nested relationships between tags, selectors can
+also include predicates on the attributes of a tag. The <code>@:</code> operator creates a
+selector that matches a tag based on the name and various conditions on the
+tag's attributes. An attribute predicate is just a function that takes an
+attribute and returns a boolean indicating if the attribute matches a criteria.
+There are several attribute operators that can be used to generate common
+predicates. The <code>@=</code> operator creates a predicate that matches the name and
+value of an attribute exactly. For example, the selector <code>"div" @: ["id" @=
+"article"]</code> matches div tags where the id attribute is equal to <code>"article"</code>.</p>
+<h2>Scrapers</h2>
+<p>Scrapers are values that are parameterized over a selector and produce a value
+from an HTML DOM tree. The <code>Scraper</code> type takes two type parameters. The first
+is the string like type that is used to store the text values within a DOM tree.
+Any string like type supported by <code>Text.StringLike</code> is valid. The second type
+is the type of value that the scraper produces.</p>
+<p>There are several scraper primitives that take selectors and extract content
+from the DOM. Each primitive defined by this library comes in two variants:
+singular and plural. The singular variants extract the first instance matching
+the given selector, while the plural variants match every instance.</p>
+<h2>Example</h2>
+<p>Complete examples can be found in the
+<a href="https://github.com/fimad/scalpel/tree/master/examples">examples</a> folder in the
+scalpel git repository.</p>
+<p>The following is an example that demonstrates most of the features provided by
+this library. Supposed you have the following hypothetical HTML located at
+<code>"http://example.com/article.html"</code> and you would like to extract a list of all
+of the comments.</p>
+<pre class="html"><code>&lt;html&gt;
+  &lt;body&gt;
+    &lt;div class='comments'&gt;
+      &lt;div class='comment container'&gt;
+        &lt;span class='comment author'&gt;Sally&lt;/span&gt;
+        &lt;div class='comment text'&gt;Woo hoo!&lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class='comment container'&gt;
+        &lt;span class='comment author'&gt;Bill&lt;/span&gt;
+        &lt;img class='comment image' src='http://example.com/cat.gif' /&gt;
+      &lt;/div&gt;
+      &lt;div class='comment container'&gt;
+        &lt;span class='comment author'&gt;Susan&lt;/span&gt;
+        &lt;div class='comment text'&gt;WTF!?!&lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p>The following snippet defines a function, <code>allComments</code>, that will download
+the web page, and extract all of the comments into a list:</p>
+<pre class="haskell"><code>type Author = String
+
+data Comment
+    = TextComment Author String
+    | ImageComment Author URL
+    deriving (Show, Eq)
+
+allComments :: IO (Maybe [Comment])
+allComments = scrapeURL "http://example.com/article.html" comments
+   where
+       comments :: Scraper String [Comment]
+       comments = chroots ("div" @: [hasClass "container"]) comment
+
+       comment :: Scraper String Comment
+       comment = textComment &lt;|&gt; imageComment
+
+       textComment :: Scraper String Comment
+       textComment = do
+           author      &lt;- text $ "span" @: [hasClass "author"]
+           commentText &lt;- text $ "div"  @: [hasClass "text"]
+           return $ TextComment author commentText
+
+       imageComment :: Scraper String Comment
+       imageComment = do
+           author   &lt;- text       $ "span" @: [hasClass "author"]
+           imageURL &lt;- attr "src" $ "img"  @: [hasClass "image"]
+           return $ ImageComment author imageURL
+</code></pre>
+<h2>Tips &amp; Tricks</h2>
+<p>The primitives provided by scalpel are intentionally minimalistic with the
+assumption being that users will be able to build up complex functionality by
+combining them with functions that work on existing type classes (Monad,
+Applicative, Alternative, etc.).</p>
+<p>This section gives examples of common tricks for building up more complex
+behavior from the simple primitives provided by this library.</p>
+<h3>OverloadedStrings</h3>
+<p><code>Selector</code>, <code>TagName</code> and <code>AttributeName</code> are all <code>IsString</code> instances, and
+thus it is convenient to use scalpel with <code>OverloadedStrings</code> enabled. If not
+using <code>OverloadedStrings</code>, all tag names must be wrapped with <code>tagSelector</code>.</p>
+<h3>Matching Wildcards</h3>
+<p>Scalpel has 3 different wildcard values each corresponding to a distinct use case.</p>
+<ul>
+<li><p><code>anySelector</code> is used to match all tags:</p>
+<p><code>textOfAllTags = texts anySelector</code></p></li>
+<li><p><code>AnyTag</code> is used when matching all tags with some attribute constraint. For
+example, to match all tags with the attribute <code>class</code> equal to <code>"button"</code>:</p>
+<p><code>textOfTagsWithClassButton = texts $ AnyTag @: [hasClass "button"]</code></p></li>
+<li><p><code>AnyAttribute</code> is used when matching tags with some arbitrary attribute equal
+to a particular value. For example, to match all tags with some attribute
+equal to <code>"button"</code>:</p>
+<p><code>textOfTagsWithAnAttributeWhoseValueIsButton = texts $ AnyTag @: [AnyAttribute @= "button"]</code></p></li>
+</ul>
+<h3>Complex Predicates</h3>
+<p>It is possible to run into scenarios where the name and attributes of a tag are
+not sufficient to isolate interesting tags and properties of child tags need to
+be considered.</p>
+<p>In these cases the <code>guard</code> function of the <code>Alternative</code> type class can be
+combined with <code>chroot</code> and <code>anySelector</code> to implement predicates of arbitrary
+complexity.</p>
+<p>Building off the above example, consider a use case where we would like find the
+html contents of a comment that mentions the word "cat".</p>
+<p>The strategy will be the following:</p>
+<ol>
+<li><p>Isolate the comment div using <code>chroot</code>.</p></li>
+<li><p>Then within the context of that div the textual contents can be retrieved
+with <code>text anySelector</code>. This works because the first tag within the current context
+is the div tag selected by chroot, and the <code>anySelector</code> selector will match the
+first tag within the current context.</p></li>
+<li><p>Then the predicate that <code>"cat"</code> appear in the text of the comment will be
+enforced using <code>guard</code>. If the predicate fails, scalpel will backtrack and
+continue the search for divs until one is found that matches the predicate.</p></li>
+<li><p>Return the desired HTML content of the comment div.</p></li>
+</ol>
+<pre class="haskell"><code>catComment :: Scraper String String
+catComment =
+    -- 1. First narrow the current context to the div containing the comment's
+    --    textual content.
+    chroot ("div" @: [hasClass "comment", hasClass "text"]) $ do
+        -- 2. anySelector can be used to access the root tag of the current context.
+        contents &lt;- text anySelector
+        -- 3. Skip comment divs that do not contain "cat".
+        guard ("cat" `isInfixOf` contents)
+        -- 4. Generate the desired value.
+        html anySelector
+</code></pre>
+<p>For the full source of this example, see
+<a href="https://github.com/fimad/scalpel/tree/master/examples/complex-predicates/">complex-predicates</a>
+in the examples directory.</p>
+<h3>Generalized Repetition</h3>
+<p>The pluralized versions of the primitive scrapers (<code>texts</code>, <code>attrs</code>, <code>htmls</code>)
+allow the user to extract content from all of the tags matching a given
+selector. For more complex scraping tasks it will at times be desirable to be
+able to extract multiple values from the same tag.</p>
+<p>Like the previous example, the trick here is to use a combination of the
+<code>chroots</code> function and the <code>anySelector</code> selector.</p>
+<p>Consider an extension to the original example where image comments may contain
+some alt text and the desire is to return a tuple of the alt text and the URLs
+of the images.</p>
+<p>The strategy will be the following:</p>
+<ol>
+<li><p>to isolate each img tag using <code>chroots</code>.</p></li>
+<li><p>Then within the context of each img tag, use the <code>anySelector</code> selector to extract
+the alt and src attributes from the current tag.</p></li>
+<li><p>Create and return a tuple of the extracted attributes.</p></li>
+</ol>
+<pre class="haskell"><code>altTextAndImages :: Scraper String [(String, URL)]
+altTextAndImages =
+    -- 1. First narrow the current context to each img tag.
+    chroots "img" $ do
+        -- 2. Use anySelector to access all the relevant content from the the currently
+        -- selected img tag.
+        altText &lt;- attr "alt" anySelector
+        srcUrl  &lt;- attr "src" anySelector
+        -- 3. Combine the retrieved content into the desired final result.
+        return (altText, srcUrl)
+</code></pre>
+<p>For the full source of this example, see
+<a href="https://github.com/fimad/scalpel/tree/master/examples/generalized-repetition/">generalized-repetition</a>
+in the examples directory.</p>
+<h3>scalpel-core</h3>
+<p>The <code>scalpel</code> package relies on curl to provide networking support. For small
+projects and one off scraping tasks this is likely sufficient. However when
+using scalpel in existing projects or on platforms without curl this dependency
+can be a hindrance.</p>
+<p>For these scenarios users can instead depend on
+<a href="https://hackage.haskell.org/package/scalpel-core">scalpel-core</a> which does not
+provide networking support and does not depend on curl.</p>
+<h2>Troubleshooting</h2>
+<h3>My Scraping Target Doesn't Return The Markup I Expected</h3>
+<p>Some websites return different markup depending on the user agent sent along
+with the request. In some cases, this even means returning no markup at all in
+an effort to prevent scraping.</p>
+<p>To work around this, you can add your own user agent string with a curl option.</p>
+<pre class="haskell"><code>#!/usr/local/bin/stack
+-- stack runghc --resolver lts-6.24 --install-ghc --package scalpel-0.4.0
+
+import Network.Curl
+import Text.HTML.Scalpel
+
+main = do
+    html &lt;- scrapeURLWithOpts opts url $ htmls anySelector
+    maybe printError printHtml html
+  where
+    url = "https://www.google.com"
+    opts = [ CurlUserAgent "some user agent string" ]
+    printError = putStrLn "Failed"
+    printHtml = mapM_ putStrLn
+</code></pre>
+<p>A list of user agent strings can be found
+<a href="http://www.useragentstring.com/pages/useragentstring.php">here</a>.</p>
+<h3>Building on Windows</h3>
+<p>Building scalpel on Windows can be a challenge because of the dependency on
+curl. In order to successfully build scalpel you must download
+<a href="http://curl.haxx.se/download.html">curl</a> and add the following to your
+stack.yaml file.</p>
+<pre class="yaml"><code>extra-lib-dirs: ["C:/Program Files/cURL/dlls"]
+extra-include-dirs: ["C:/Program Files/cURL/dlls"]
+</code></pre>
+<p>If you do not require network support, you can instead depend on
+<a href="https://hackage.haskell.org/package/scalpel-core">scalpel-core</a> which does not
+does not depend on curl.</p>
+
+</div>
+    </div>
+    
+
+  </div> <!-- /content -->
+
+  <div id="footer">
+  <p>
+    Produced by <a href="https://hackage.haskell.org/">hackage</a> and <a href="http://haskell.org/cabal/">Cabal</a> 2.0.0.2.
+  </p>
+</div>
+
+
+<span style="border-radius: 3px; text-indent: 20px; width: auto; padding: 0px 4px 0px 0px; text-align: center; font-style: normal; font-variant: normal; font-weight: bold; font-stretch: normal; font-size: 11px; line-height: 20px; font-family: &quot;Helvetica Neue&quot;, Helvetica, sans-serif; color: rgb(255, 255, 255); background: url(&quot;data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGhlaWdodD0iMzBweCIgd2lkdGg9IjMwcHgiIHZpZXdCb3g9Ii0xIC0xIDMxIDMxIj48Zz48cGF0aCBkPSJNMjkuNDQ5LDE0LjY2MiBDMjkuNDQ5LDIyLjcyMiAyMi44NjgsMjkuMjU2IDE0Ljc1LDI5LjI1NiBDNi42MzIsMjkuMjU2IDAuMDUxLDIyLjcyMiAwLjA1MSwxNC42NjIgQzAuMDUxLDYuNjAxIDYuNjMyLDAuMDY3IDE0Ljc1LDAuMDY3IEMyMi44NjgsMC4wNjcgMjkuNDQ5LDYuNjAxIDI5LjQ0OSwxNC42NjIiIGZpbGw9IiNmZmYiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSIxIj48L3BhdGg+PHBhdGggZD0iTTE0LjczMywxLjY4NiBDNy41MTYsMS42ODYgMS42NjUsNy40OTUgMS42NjUsMTQuNjYyIEMxLjY2NSwyMC4xNTkgNS4xMDksMjQuODU0IDkuOTcsMjYuNzQ0IEM5Ljg1NiwyNS43MTggOS43NTMsMjQuMTQzIDEwLjAxNiwyMy4wMjIgQzEwLjI1MywyMi4wMSAxMS41NDgsMTYuNTcyIDExLjU0OCwxNi41NzIgQzExLjU0OCwxNi41NzIgMTEuMTU3LDE1Ljc5NSAxMS4xNTcsMTQuNjQ2IEMxMS4xNTcsMTIuODQyIDEyLjIxMSwxMS40OTUgMTMuNTIyLDExLjQ5NSBDMTQuNjM3LDExLjQ5NSAxNS4xNzUsMTIuMzI2IDE1LjE3NSwxMy4zMjMgQzE1LjE3NSwxNC40MzYgMTQuNDYyLDE2LjEgMTQuMDkzLDE3LjY0MyBDMTMuNzg1LDE4LjkzNSAxNC43NDUsMTkuOTg4IDE2LjAyOCwxOS45ODggQzE4LjM1MSwxOS45ODggMjAuMTM2LDE3LjU1NiAyMC4xMzYsMTQuMDQ2IEMyMC4xMzYsMTAuOTM5IDE3Ljg4OCw4Ljc2NyAxNC42NzgsOC43NjcgQzEwLjk1OSw4Ljc2NyA4Ljc3NywxMS41MzYgOC43NzcsMTQuMzk4IEM4Ljc3NywxNS41MTMgOS4yMSwxNi43MDkgOS43NDksMTcuMzU5IEM5Ljg1NiwxNy40ODggOS44NzIsMTcuNiA5Ljg0LDE3LjczMSBDOS43NDEsMTguMTQxIDkuNTIsMTkuMDIzIDkuNDc3LDE5LjIwMyBDOS40MiwxOS40NCA5LjI4OCwxOS40OTEgOS4wNCwxOS4zNzYgQzcuNDA4LDE4LjYyMiA2LjM4NywxNi4yNTIgNi4zODcsMTQuMzQ5IEM2LjM4NywxMC4yNTYgOS4zODMsNi40OTcgMTUuMDIyLDYuNDk3IEMxOS41NTUsNi40OTcgMjMuMDc4LDkuNzA1IDIzLjA3OCwxMy45OTEgQzIzLjA3OCwxOC40NjMgMjAuMjM5LDIyLjA2MiAxNi4yOTcsMjIuMDYyIEMxNC45NzMsMjIuMDYyIDEzLjcyOCwyMS4zNzkgMTMuMzAyLDIwLjU3MiBDMTMuMzAyLDIwLjU3MiAxMi42NDcsMjMuMDUgMTIuNDg4LDIzLjY1NyBDMTIuMTkzLDI0Ljc4NCAxMS4zOTYsMjYuMTk2IDEwLjg2MywyNy4wNTggQzEyLjA4NiwyNy40MzQgMTMuMzg2LDI3LjYzNyAxNC43MzMsMjcuNjM3IEMyMS45NSwyNy42MzcgMjcuODAxLDIxLjgyOCAyNy44MDEsMTQuNjYyIEMyNy44MDEsNy40OTUgMjEuOTUsMS42ODYgMTQuNzMzLDEuNjg2IiBmaWxsPSIjYmQwODFjIj48L3BhdGg+PC9nPjwvc3ZnPg==&quot;) 3px 50% / 14px 14px no-repeat rgb(189, 8, 28); position: absolute; opacity: 1; z-index: 8675309; display: none; cursor: pointer; border: none; -webkit-font-smoothing: antialiased;">Save</span><span style="border-radius: 3px; text-indent: 20px; width: 20px; height: 20px; background: url(&quot;data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHdpZHRoPSIzMHB4IiBoZWlnaHQ9IjMwcHgiIHZpZXdCb3g9IjAgMCAzMCAzMCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj4KPGc+CjxwYXRoIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSI0IiBkPSJNMTcsMTcgTDIyLDIyIFogIi8+CjxjaXJjbGUgc3Ryb2tlPSIjZmZmIiBjeD0iMTMiIGN5PSIxMyIgcj0iNiIgZmlsbD0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIzLjUiLz4KPHBhdGggZmlsbD0iI2ZmZiIgZD0iTTAsMCBMOCwwIEw4LDMgTDMsMyBMMyw4IEwwLDggWiIvPgo8cGF0aCBmaWxsPSIjZmZmIiBkPSJNMzAsMjIgTDMwLDMwIEwyMiwzMCBMMjIsMjcgTDI3LDI3IEwyNywyMiBaIi8+CjxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik0zMCwwIEwzMCw4IEwyNyw4IEwyNywzIEwyMiwzIEwyMiwwIFoiLz4KPHBhdGggZmlsbD0iI2ZmZiIgZD0iTTAsMjIgTDMsMjIgTDMsMjcgTDgsMjcgTDgsMzAgTDAsMzBaIi8+CjwvZz4KPC9zdmc+Cg==&quot;) 50% 50% / 14px 14px no-repeat rgba(0, 0, 0, 0.4); position: absolute; opacity: 1; z-index: 8675309; display: none; cursor: pointer; border: none;"></span></body></html>
