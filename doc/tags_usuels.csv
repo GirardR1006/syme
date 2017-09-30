@@ -1,0 +1,20 @@
+https://www.fun-mooc.fr/cours/
+
+
+#course-filtering-results > li:nth-child(1) 
+DONNE LES INFOS POUR UN COURS
+
+#course-filtering-results > li:nth-child(1) > div > div.middle > div.title > a 
+DONNE LE TITRE DU MOOC
+
+#course-filtering-results > li:nth-child(1) > div > div.middle > div.universities > a
+DONNE LA PROVENANCE
+
+#course-filtering-results > li:nth-child(1) > div > div.middle > div.universities > a href
+DONNE UN LIEN
+
+DANS LE LIEN CLIQUÉ
+body > div.main-width > div.container-fluid.drop-down > div.course-about.main-content.compensate-right-column > div 
+> div.col-lg-21.col-lg-pull-15.col-sm-26.col-sm-pull-10.no-gutter-left.no-gutter-right > div > div.subjects DONNE 
+LES THÉMATIQUES
+

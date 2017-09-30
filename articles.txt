@@ -1,0 +1,22 @@
+Web Mining Research: A Survey
+
+Unstructured and semi-structured data: Bag of words, N-grams, etc.
+Our usage: text classification / text categorization
+Methods: TFIDF, NLP (statistical methods)
+naive Bayes / Bayes trees || S. Dumais, J. Platt, D. Heckerman, and M. Sa-
+hami. Inductive learning algorithms and representa-
+tions for text categorization. In Proceedings of the 1998
+ACM 7th international conference on Information and
+knowledge management, pages 148–155, Washington
+United States, 1998.
+
+association rules
+
+Web structure mining (Information recovery)
+mostly graph processing. Need to ask to some Operational Researcher
+
+
+Needs to figure out solutions for data recovery AND data extraction:
+    identify the most relevant sources (potentially with the help of Web structure mining) 
+    extract from those sources the relevant chunks of data
+    (process those chunks to partially convert them into Methode)

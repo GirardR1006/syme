@@ -420,6 +420,7 @@
                     <property name="can_focus">True</property>
                     <property name="vexpand">True</property>
                     <property name="editable">False</property>
+                    <property name="wrap_mode">word</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -446,6 +447,7 @@
                     <property name="can_focus">True</property>
                     <property name="vexpand">True</property>
                     <property name="editable">False</property>
+                    <property name="wrap_mode">word</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
