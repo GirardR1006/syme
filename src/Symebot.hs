@@ -3,6 +3,7 @@
 module Symebot(
  RawO(..)
  ,test
+ ,scrapeall
  ,defO 
  ,symeScrape
 )
@@ -92,7 +93,12 @@ test = do
          d <- (eitherDecode <$> jSON ) :: IO (Either String UdacityList)
          case d of 
            Left err -> putStrLn err
-           Right ps -> print (crRawO ((udacityList ps)!!1) )        
+           Right ps -> print (crRawO ((udacityList ps)!!1) )     
+
+scrapeall sources = do fmres   <- funmoocFlavour (simpleHttp (sources!!0))
+                       crsrres <- courseraFlavour (simpleHttp (sources!!1))
+                       udctres <- udacityFlavour (simpleHttp (sources!!2))
+                       return([fmres,crsrres,udctres])
 
 symeScrape :: [String] -> IO([RawO])
 symeScrape [sourcetype,source] | sourcetype == "file" = scrapeFromFile source
@@ -110,8 +116,7 @@ parseByFlavour s i | "fun-mooc" `Data.List.isInfixOf` s = do funmoocFlavour i
                    | "coursera" `Data.List.isInfixOf` s = do courseraFlavour i
                    | "udacity"  `Data.List.isInfixOf` s = do udacityFlavour i
                    | otherwise = print "no flavour configured for this input" >> return []
---TODO: filter all output to remove \n and ';' in descriptions
---Also, why the heck do we have a shift in written fields for coursera stuff? 
+
 funmoocFlavour i = do d <- (eitherDecode <$> i) :: IO (Either String FunmoocList)
                       case d of 
                         Left err -> return [defO]

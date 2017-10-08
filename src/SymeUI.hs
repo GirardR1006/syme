@@ -358,6 +358,9 @@ symeui = do
                                                dialogResponse dialogdel ResponseOk 
     qbttndel `on` buttonActivated $ dialogResponse dialogdel ResponseCancel
 --Auto-update method window signals
+--Need to revamp this: 
+--User should only have to push a button and update every source
+--
 ----Buttons
     abttnau `on` buttonActivated $ do url <- currentTvwSelectionURL autreeview audstore
                                       if url == "NO_URL"
@@ -383,7 +386,8 @@ symeui = do
                                          dsl <- listStoreToList difstore
                                          let tobs = Prelude.filter(\x->snd(x)==True) dsl
                                          let nml = Prelude.map ((cmfo url).fst) tobs
-                                         chainAtomIO nml methmap     
+                                         chainAtomIO nml methmap 
+                                         dialogResponse dialogdif ResponseOk
 
     qbttndiff `on` buttonActivated $ dialogResponse dialogdif ResponseCancel
 ----TreeView
