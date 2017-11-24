@@ -219,7 +219,7 @@ symeui = do
 --Loading data from file. Since it will be modified several time during
 --runtime (on a single-thread basis), IORef monad is used.
     nm <- getMapMeth "src/onche.cod"
-    si <- sourcesFromFile "test/sources.txt"
+    si <- sourcesFromFile "src/.sources"
     methmap<- newIORef nm
     --TODO: fonction qui créé de si et nm une liste de valeurs Source 
 --TreeView initialization and configuration

@@ -1,0 +1,4 @@
+https://www.fun-mooc.fr/fun/api/courses/?rpp=5000&page1;2017-08-21;
+https://api.coursera.org/api/courses.v1?start=0&limit=5000&fields=description,domainTypes;2017-09-19;
+https://www.udacity.com/public-api/v0/courses?limit=5000;2017-09-19;
+https://iversity.org/api/v1/courses?limit=5000;2017-09-19;

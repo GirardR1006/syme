@@ -19,9 +19,9 @@ import System.Environment
 -- Instance to create a RawO from a parsed value
 class WannabeRawO a where 
   crRawO :: a -> RawO
---Sanitizer function
+-- Sanitizer function
 si = Data.List.filter ((&&) <$> (/='\n') <*> (/=';'))
--- raw output type, created by collection of different parsed sources
+-- Raw output type, created by collection of different parsed sources
 data RawO = RawO {titlep::String
                  ,domainp::String
                  ,originep::String
@@ -29,7 +29,7 @@ data RawO = RawO {titlep::String
                  ,lienp::String} deriving (Show)
 defO = RawO {titlep="Default title",domainp="Default domain",originep="Default origin"
             ,descriptionp="Default description",lienp="Default link"}
--- type for parsing fun-mooc API
+-- Type for parsing fun-mooc API
 newtype FunmoocList = FunmoocList {funmoocList::[Funmooc]} deriving(Show)
 instance FromJSON FunmoocList where
   parseJSON (Object o) = FunmoocList <$> o .: "results"
@@ -47,7 +47,7 @@ instance WannabeRawO Funmooc where
                   ,originep=(univfnmc f)
                   ,descriptionp=""
                   ,lienp=""} 
----- type for parsing coursera API
+--Type for parsing coursera API
 newtype CourseraList = CourseraList {courseraList::[Coursera]} deriving(Show)
 instance FromJSON CourseraList where
   parseJSON (Object o) = CourseraList <$> o .: "elements"
@@ -66,7 +66,7 @@ instance WannabeRawO Coursera where
                   ,originep=""
                   ,descriptionp=(si.descriptioncrsr) f
                   ,lienp=""} 
----- type for parsing udacity API
+--Type for parsing udacity API
 newtype UdacityList = UdacityList {udacityList::[Udacity]} deriving(Show)
 instance FromJSON UdacityList where
   parseJSON (Object o) = UdacityList <$> o .: "courses"
@@ -86,6 +86,28 @@ instance WannabeRawO Udacity where
                   ,domainp="",originep=""
                   ,descriptionp=(si.descriptionudct) f
                   ,lienp=(si.urludct) f} 
+--Type for parsing iversity API
+newtype IversityList = IversityList {iversityList::[Iversity]} deriving(Show)
+instance FromJSON IversityList where
+  parseJSON (Object o) = IversityList <$> o .: "courses"
+data Iversity = Iversity {titleict::String
+                         ,subtitleict::String
+                         ,urlict::String
+                         ,descriptionict::String
+                         ,domict::String}
+                         deriving (Show)
+instance FromJSON Iversity where
+  parseJSON (Object v) = 
+    Iversity <$> v .: "title"
+             <*> v .: "subtitle"
+             <*> v .: "url"
+             <*> v .: "description"
+             <*> v .: "discipline"
+instance WannabeRawO Iversity where
+  crRawO f = RawO {titlep=(si((titleict f) ++ " - " ++ (subtitleict f)))
+                  ,domainp=(si (domict f))
+                  ,descriptionp=(si.descriptionict) f
+                  ,lienp=(si.urlict) f,originep=""} 
 --Precious test function, to be used within ghci to test parsing strategies
 --before implementing them
 test = do  
@@ -112,9 +134,10 @@ scrapeFromFile fp = do  let c = B.readFile fp
 scrapeFromURL url = do  let c = simpleHttp url
                         parseByFlavour url c 
 --Add here different parsing strategies
-parseByFlavour s i | "fun-mooc" `Data.List.isInfixOf` s = do funmoocFlavour i
-                   | "coursera" `Data.List.isInfixOf` s = do courseraFlavour i
-                   | "udacity"  `Data.List.isInfixOf` s = do udacityFlavour i
+parseByFlavour s i | "fun-mooc" `Data.List.isInfixOf`  s = do funmoocFlavour i
+                   | "coursera" `Data.List.isInfixOf`  s = do courseraFlavour i
+                   | "udacity"  `Data.List.isInfixOf`  s = do udacityFlavour i
+                   | "iversity"  `Data.List.isInfixOf` s = do iversityFlavour i
                    | otherwise = print "no flavour configured for this input" >> return []
 
 funmoocFlavour i = do d <- (eitherDecode <$> i) :: IO (Either String FunmoocList)
@@ -131,3 +154,8 @@ udacityFlavour i = do d <- (eitherDecode <$> i) :: IO (Either String UdacityList
                       case d of 
                         Left err -> return [defO]
                         Right ps -> return (Data.List.map crRawO (udacityList ps))
+
+iversityFlavour i = do d <- (eitherDecode <$> i) :: IO (Either String IversityList)
+                       case d of 
+                         Left err -> return [defO]
+                         Right ps -> return (Data.List.map crRawO (iversityList ps))
