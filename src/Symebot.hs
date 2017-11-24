@@ -6,6 +6,7 @@ module Symebot(
  ,scrapeall
  ,defO 
  ,symeScrape
+ ,symeScrape'
 )
 where
 
@@ -16,6 +17,7 @@ import Data.List
 import Data.Text
 import Network.HTTP.Conduit
 import System.Environment
+import Control.Exception
 -- Instance to create a RawO from a parsed value
 class WannabeRawO a where 
   crRawO :: a -> RawO
@@ -127,12 +129,15 @@ symeScrape [sourcetype,source] | sourcetype == "file" = scrapeFromFile source
                                | sourcetype == "url"  = scrapeFromURL source
                                | otherwise            = print "dank"  >> return []
 symeScrape _ = print "Usage: handleArgs [file|url] fichier|url" >> return []
+--Parse a list of urls 
+symeScrape' l = mapM scrapeFromURL l
+
 
 scrapeFromFile fp = do  let c = B.readFile fp
                         parseByFlavour fp c
 
 scrapeFromURL url = do  let c = simpleHttp url
-                        parseByFlavour url c 
+                        parseByFlavour url c
 --Add here different parsing strategies
 parseByFlavour s i | "fun-mooc" `Data.List.isInfixOf`  s = do funmoocFlavour i
                    | "coursera" `Data.List.isInfixOf`  s = do courseraFlavour i

@@ -162,6 +162,7 @@ symeui = do
     qbttndel <- builderGetObject builder castToButton "delMethquitBttn"
     abttnau <- builderGetObject builder castToButton "autoUpdateupdateBttn"
     qbttnau <- builderGetObject builder castToButton "autoUpdatequitBttn"
+    fbttnau <- builderGetObject builder castToButton "autoUpdatefulluBttn"
     vsbttndiff <- builderGetObject builder castToButton "diffvalselBttn"
     qbttndiff <- builderGetObject builder castToButton "diffquitBttn"
 --Comboboxes definition
@@ -376,6 +377,11 @@ symeui = do
                                                   putStrLn "Cancel signal received, hiding window"
                                                   >> widgetHide dialogdif
     qbttnau `on` buttonActivated $ dialogResponse dialogupd ResponseCancel
+    fbttnau `on` buttonActivated $ do let urls = Prelude.map fst si
+                                      results <- symeScrape' urls
+                                      let listOfMeth = pleaseKillMe urls results
+                                      snort listOfMeth methmap
+                                   dialogResponse dialogupd ResponseOk
 --Diff window signals
 ----Buttons
     --Get the proposal that were ticked by the user, then register them in
@@ -384,7 +390,7 @@ symeui = do
                                          dsl <- listStoreToList difstore
                                          let tobs = Prelude.filter(\x->snd(x)==True) dsl
                                          let nml = Prelude.map ((cmfo url).fst) tobs
-                                         chainAtomIO nml methmap 
+                                         chainAtomIO methmap nml
                                          dialogResponse dialogdif ResponseOk
 
     qbttndiff `on` buttonActivated $ dialogResponse dialogdif ResponseCancel
@@ -417,7 +423,15 @@ cmfo u o = Methode {nom=titlep o
                    ,lien=lienp o
                    ,description=descriptionp o
                    ,sourceName=u}
-chainAtomIO::[Methode] -> IORef (Map Int Methode) -> IO()
-chainAtomIO (x:xs) mr = do atomicModifyIORef mr (\m->(addMethToMap x m ,()))
-                           chainAtomIO xs mr
-chainAtomIO [] _      = return()
+chainAtomIO:: IORef (Map Int Methode) -> [Methode] ->IO()
+chainAtomIO mr (x:xs)  = do atomicModifyIORef mr (\m->(addMethToMap x m ,()))
+                            chainAtomIO mr xs
+chainAtomIO _ []       = return()
+--This function takes all urls and all results from SymeBot and create a list
+--of methods with it
+pleaseKillMe (x:xs) (y:ys) = Prelude.map (cmfo x) y : pleaseKillMe xs ys
+pleaseKillMe [] []         = []
+snort :: [[Methode]] -> IORef (Map Int Methode) -> IO()
+snort (x:xs) mr           = do chainAtomIO mr x
+                               snort xs mr
+snort [] _                = return()
