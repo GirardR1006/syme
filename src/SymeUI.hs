@@ -253,10 +253,8 @@ symeui = do
     difftreeview <- builderGetObject builder castToTreeView "diffDisplayTreeView"
     difftreeviewselect <- treeViewGetSelection difftreeview
     omcolumn <- builderGetObject builder castToTreeViewColumn "oldMethTreeViewColumn"
-    nmcolumn <- builderGetObject builder castToTreeViewColumn "newMethTreeViewColumn"
     selcolumn <- builderGetObject builder castToTreeViewColumn "toggleTreeViewColumn"
     cellom <- builderGetObject builder castToCellRendererText "oldMethTreeViewCell"
-    cellnm <- builderGetObject builder castToCellRendererText "newMethTreeViewCell"
     celltg <- builderGetObject builder castToCellRendererToggle "toggleTreeViewCell"
     difstore <- listStoreNew [(defO,True)]
     cellLayoutSetAttributes omcolumn cellom difstore $ \x -> [cellText :=  (titlep.fst $ x)]

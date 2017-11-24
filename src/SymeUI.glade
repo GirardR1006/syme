@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.20.0 -->
+<!-- Generated with glade 3.20.1 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
   <object class="GtkDialog" id="diffDialog">
@@ -67,20 +67,12 @@
                     </child>
                     <child>
                       <object class="GtkTreeViewColumn" id="oldMethTreeViewColumn">
+                        <property name="sizing">fixed</property>
                         <property name="title" translatable="yes">Ancienne méthode</property>
                         <child>
-                          <object class="GtkCellRendererText" id="oldMethTreeViewCell"/>
-                          <attributes>
-                            <attribute name="text">0</attribute>
-                          </attributes>
-                        </child>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkTreeViewColumn" id="newMethTreeViewColumn">
-                        <property name="title" translatable="yes">Nouvelle méthode</property>
-                        <child>
-                          <object class="GtkCellRendererText" id="newMethTreeViewCell"/>
+                          <object class="GtkCellRendererText" id="oldMethTreeViewCell">
+                            <property name="wrap_width">500</property>
+                          </object>
                           <attributes>
                             <attribute name="text">0</attribute>
                           </attributes>
