@@ -136,8 +136,11 @@ symeScrape' l = mapM scrapeFromURL l
 scrapeFromFile fp = do  let c = B.readFile fp
                         parseByFlavour fp c
 
-scrapeFromURL url = do  let c = simpleHttp url
-                        parseByFlavour url c
+scrapeFromURL url = do  res <- try (simpleHttp url) :: IO (Either HttpException B.ByteString)
+                        case res of 
+                          Right c -> do let c' = return(c)::IO(B.ByteString)
+                                        parseByFlavour url c'
+                          Left  d -> return []
 --Add here different parsing strategies
 parseByFlavour s i | "fun-mooc" `Data.List.isInfixOf`  s = do funmoocFlavour i
                    | "coursera" `Data.List.isInfixOf`  s = do courseraFlavour i

@@ -381,7 +381,7 @@ symeui = do
                                       results <- symeScrape' urls
                                       let listOfMeth = pleaseKillMe urls results
                                       snort listOfMeth methmap
-                                   dialogResponse dialogupd ResponseOk
+                                      dialogResponse dialogupd ResponseOk
 --Diff window signals
 ----Buttons
     --Get the proposal that were ticked by the user, then register them in
