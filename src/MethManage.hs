@@ -43,15 +43,14 @@ createMethFromVal l = Methode {nom=l!!0,domaine=l!!1,origine=l!!2
                               ,description=l!!3,lien=l!!4,sourceName=l!!5}
 
 --Parse a file into a map of Methodes
-getMapMeth fp = do 
-                 lc <- fmap lines $ readFile fp
-                 let splc = map (splitOn(";")) lc
-                 let idLst = getIdLst splc
-                 let vaLst = getValLst splc
-                 let methLst = Prelude.map createMethFromVal vaLst
-                 let lm =  zipWith (\key values -> (read(key) :: Int,values)) idLst methLst
-                 let mapMeth = Map.fromList lm
-                 return mapMeth
+getMapMeth fp = do lc <- fmap lines $ readFile fp
+                   let splc = map (splitOn(";")) lc
+                   let idLst = getIdLst splc
+                   let vaLst = getValLst splc
+                   let methLst = Prelude.map createMethFromVal vaLst
+                   let lm =  zipWith (\key values -> (read(key) :: Int,values)) idLst methLst
+                   let mapMeth = Map.fromList lm
+                   return mapMeth
 
 --Search a Methode in a map regarding the record values
 searchBy :: String --The field in which the predicate is supposed to be
@@ -81,17 +80,15 @@ addMethToMap :: Methode  --Value to be added
              -> Map.Map Int Methode --Result map
 addMethToMap meth map = Map.insert ((maxKeyInMap map)+1) meth map 
 
-saveMapInFile m fp = do
-                      let keyList  = Prelude.map (show.fst) (Map.toList m)
-                      let methList = Prelude.map (stringRepresentation.snd) (Map.toList m)
-                      let toBeWritten = zipWith (\id s -> id ++ ";" ++ s) keyList methList
-                      copyFile fp (fp ++ ".cod.tmp")
-                      writeFile fp ""
-                      mapM_ (appendFile fp) $ toBeWritten 
-                        where stringRepresentation m =
-                                                    f(nom m) ++ ";" ++ f(domaine m) 
-                                                    ++ ";" ++ f(origine m) 
-                                                    ++ ";" ++ f(description m) 
-                                                    ++ ";" ++ f(lien m) 
-                                                    ++ ";" ++ f(sourceName m) ++ ";\n"
-                                                        where f m = if m == "" then " " else m
+saveMapInFile m fp = do let keyList  = Prelude.map (show.fst) (Map.toList m)
+                        let methList = Prelude.map (stringRepresentation.snd) (Map.toList m)
+                        let toBeWritten = zipWith (\id s -> id ++ ";" ++ s) keyList methList
+                        copyFile fp (fp ++ ".cod.tmp")
+                        writeFile fp ""
+                        mapM_ (appendFile fp) $ toBeWritten 
+                          where stringRepresentation m = f(nom m) ++ ";" ++ f(domaine m) 
+                                                         ++ ";" ++ f(origine m) 
+                                                         ++ ";" ++ f(description m) 
+                                                         ++ ";" ++ f(lien m) 
+                                                         ++ ";" ++ f(sourceName m) ++ ";\n"
+                                                             where f m = if m == "" then " " else m
