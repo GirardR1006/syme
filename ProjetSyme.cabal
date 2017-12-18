@@ -17,7 +17,7 @@ cabal-version:       >=1.10
 
 executable ProjetSyme
   main-is:             Main.hs
-  -- other-modules:       
+  other-modules:       Methodinno, MethManage, Symebot, SymeUI, SourceManage
   other-extensions:    ScopedTypeVariables, TupleSections, BangPatterns, FlexibleInstances, Rank2Types, ImpredicativeTypes, FlexibleContexts, MultiWayIf, OverloadedStrings, PartialTypeSignatures
 
   build-depends:       
@@ -35,7 +35,7 @@ executable ProjetSyme
                      , glib>=0.13.4.1
                      , time>=1.6
                      , split>=0.2
-                     , aeson>=1.2
+                     , aeson
                      , http-conduit>=2.2
                      , unordered-containers>=0.2
                      , utf8-string>=1.0
