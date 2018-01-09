@@ -142,18 +142,21 @@ symeui = do
     dialogdel <- builderGetObject builder castToDialog "delMethDialog" 
     dialogupd <- builderGetObject builder castToDialog "autoUpdateDialog" 
     dialogdif <- builderGetObject builder castToDialog "diffDialog" 
+    dialogern <- builderGetObject builder castToDialog "errorNetworkDialog" 
     window `on` deleteEvent $ liftIO mainQuit >> return False
     dialogadd `on` deleteEvent $ liftIO (widgetHide dialogadd) >> return False
     dialogmod `on` deleteEvent $ liftIO (widgetHide dialogmod) >> return False
     dialogdel `on` deleteEvent $ liftIO (widgetHide dialogdel) >> return False
     dialogupd `on` deleteEvent $ liftIO (widgetHide dialogupd) >> return False
     dialogdif `on` deleteEvent $ liftIO (widgetHide dialogdif) >> return False
+    dialogern `on` deleteEvent $ liftIO (widgetHide dialogern) >> return False
 --Button definition
     abttn <- builderGetObject builder castToButton "addBttn"
     sbttn <- builderGetObject builder castToButton "showBttn"
     dbttn <- builderGetObject builder castToButton "delBttn"
     autbttn<- builderGetObject builder castToButton "autBttn"
     qbttn <- builderGetObject builder castToButton "quitBttn"
+    csvbttn <- builderGetObject builder castToButton "csvBttn"
     abttnadd <- builderGetObject builder castToButton "addMethaddBttn"
     qbttnadd <- builderGetObject builder castToButton "addMethquitBttn"
     mbttnmod <- builderGetObject builder castToButton "modMethmodBttn"
@@ -165,6 +168,7 @@ symeui = do
     fbttnau <- builderGetObject builder castToButton "autoUpdatefulluBttn"
     vsbttndiff <- builderGetObject builder castToButton "diffvalselBttn"
     qbttndiff <- builderGetObject builder castToButton "diffquitBttn"
+    qbttnerrn <- builderGetObject builder castToButton "errorNetworkDialogOkBttn"
 --Comboboxes definition
 --Search combobox item must match with the searchBy function criteria
     scbbx <- builderGetObject builder castToComboBox "searchCbbx"
@@ -302,6 +306,11 @@ symeui = do
                                           putStrLn "Cancel signal received, hiding window."
                                           >> widgetHide dialogupd
                                     
+    csvbttn `on` buttonActivated $ do putStrLn "Saving data in storage..."
+                                      rf <- readIORef methmap
+                                      today <- curDate
+                                      saveMapInFile rf ("src/"++show(today)++".csv")
+                                      putStrLn "Data saved"
     qbttn `on` buttonActivated $ do putStrLn "Saving data in storage..."
                                     rf <- readIORef methmap
                                     saveMapInFile rf "src/onche.cod"
@@ -379,9 +388,16 @@ symeui = do
     qbttnau `on` buttonActivated $ dialogResponse dialogupd ResponseCancel
     fbttnau `on` buttonActivated $ do let urls = Prelude.map fst si
                                       results <- symeScrape' urls
-                                      let listOfMeth = pleaseKillMe urls results
-                                      snort listOfMeth methmap
-                                      dialogResponse dialogupd ResponseOk
+                                      case results of 
+                                        [] -> do handleNetError <- dialogRun dialogern
+                                                 if handleNetError == ResponseOk then do
+                                                   widgetHide dialogern 
+                                                 else do
+                                                   widgetHide dialogern
+                                                 dialogResponse dialogupd ResponseOk
+                                        _ -> do let listOfMeth = pleaseKillMe urls results
+                                                snort listOfMeth methmap
+                                                dialogResponse dialogupd ResponseOk
 --Diff window signals
 ----Buttons
     --Get the proposal that were ticked by the user, then register them in
@@ -394,6 +410,9 @@ symeui = do
                                          dialogResponse dialogdif ResponseOk
 
     qbttndiff `on` buttonActivated $ dialogResponse dialogdif ResponseCancel
+--Network error window signal
+----Button
+    qbttnerrn `on` buttonActivated $ dialogResponse dialogern ResponseOk
 ----TreeView
     difftreeviewselect `on` treeSelectionSelectionChanged $ do 
         o <- ded difftreeview difstore
