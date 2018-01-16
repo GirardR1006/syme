@@ -43,14 +43,17 @@ createMethFromVal l = Methode {nom=l!!0,domaine=l!!1,origine=l!!2
                               ,description=l!!3,lien=l!!4,sourceName=l!!5}
 
 --Parse a file into a map of Methodes
-getMapMeth fp = do lc <- fmap lines $ readFile fp
-                   let splc = map (splitOn(";")) lc
-                   let idLst = getIdLst splc
-                   let vaLst = getValLst splc
-                   let methLst = Prelude.map createMethFromVal vaLst
-                   let lm =  zipWith (\key values -> (read(key) :: Int,values)) idLst methLst
-                   let mapMeth = Map.fromList lm
-                   return mapMeth
+getMapMeth fp = do tryRead <- try (readFile fp)::IO(Either IOException String)
+                   case tryRead of
+                     Left a -> print("No file found, starting with empty map") >> return(Map.empty)
+                     Right b -> do let lc = lines b
+                                   let splc = map (splitOn(";")) lc
+                                   let idLst = getIdLst splc
+                                   let vaLst = getValLst splc
+                                   let methLst = Prelude.map createMethFromVal vaLst
+                                   let lm =  zipWith (\key values -> (read(key) :: Int,values)) idLst methLst
+                                   let mapMeth = Map.fromList lm
+                                   return mapMeth
 
 --Search a Methode in a map regarding the record values
 searchBy :: String --The field in which the predicate is supposed to be

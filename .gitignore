@@ -1,7 +1,7 @@
-bin/
-dist/
-doc/
-test/
+bin/*
+dist/*
+doc/*
+test/*
 ChangeLog.md
 *.o
 *.hi
@@ -9,10 +9,10 @@ ChangeLog.md
 *.tmp
 *.txt
 *.cod
+*.csv
 sources
 
 src/SymeUINew\.hs
 
-src/TODO
 
 src/onche\.cod\.backup
