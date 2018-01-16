@@ -83,7 +83,6 @@ addMethToMap meth map = Map.insert ((maxKeyInMap map)+1) meth map
 saveMapInFile m fp = do let keyList  = Prelude.map (show.fst) (Map.toList m)
                         let methList = Prelude.map (stringRepresentation.snd) (Map.toList m)
                         let toBeWritten = zipWith (\id s -> id ++ ";" ++ s) keyList methList
-                        copyFile fp (fp ++ ".cod.tmp")
                         writeFile fp ""
                         mapM_ (appendFile fp) $ toBeWritten 
                           where stringRepresentation m = f(nom m) ++ ";" ++ f(domaine m) 

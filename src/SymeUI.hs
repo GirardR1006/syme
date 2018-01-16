@@ -127,7 +127,11 @@ updateStore c e m l = do res <- mapBySearchResult c e m
                          case res of Just []      -> listStoreClear l
                                      Just x       -> do listStoreClear l >> mapM_ (listStoreAppend l) x 
                                      Nothing      -> return()
-                            
+--Update store content after auto-update
+updateStoreAfterUpdate :: M.Map Int Methode -> ListStore (String,String) -> IO()
+updateStoreAfterUpdate m l = do let listStoreFromMap = convertMapToListStore m
+                                case listStoreFromMap of []      -> listStoreClear l
+                                                         x       -> do listStoreClear l >> mapM_ (listStoreAppend l) x 
 symeui :: IO ()
 symeui = do
     initGUI
@@ -397,6 +401,8 @@ symeui = do
                                                  dialogResponse dialogupd ResponseOk
                                         _ -> do let listOfMeth = pleaseKillMe urls results
                                                 snort listOfMeth methmap
+                                                ref <- readIORef methmap
+                                                updateStoreAfterUpdate ref store      
                                                 dialogResponse dialogupd ResponseOk
 --Diff window signals
 ----Buttons
